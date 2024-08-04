@@ -50,7 +50,9 @@ group :development do
   gem "web-console"
 
   # Highlight the fine-grained location where an error occurred [https://github.com/ruby/error_highlight]
-  gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
+  # Removing this because this is happening in the build
+  # /opt/hostedtoolcache/Ruby/3.1.2/x64/lib/ruby/gems/3.1.0/gems/bundler-2.5.3/lib/bundler/runtime.rb:304:in `check_for_activated_spec!': You have already activated error_highlight 0.3.0, but your Gemfile requires error_highlight 0.6.0. Since error_highlight is a default gem, you can either remove your dependency on it or try updating to a newer version of bundler that supports error_highlight as a default gem. (Gem::LoadError)
+  # gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
 
   # Annotate things
   gem "annotaterb"
