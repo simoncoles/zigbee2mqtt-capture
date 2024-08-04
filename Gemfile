@@ -58,3 +58,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+# For environment variables
+gem 'dotenv', groups: [:development, :test]
