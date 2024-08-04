@@ -1,0 +1,21 @@
+# == Schema Information
+#
+# Table name: mqtt_messages
+#
+#  id         :bigint           not null, primary key
+#  content    :text
+#  topic      :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_mqtt_messages_on_topic  (topic)
+#
+require "test_helper"
+
+class MqttMessageTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
+end

@@ -72,6 +72,7 @@ GEM
       tzinfo (~> 2.0, >= 2.0.5)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    annotaterb (4.10.2)
     ast (2.4.2)
     base64 (0.2.0)
     bigdecimal (3.1.8)
@@ -131,6 +132,7 @@ GEM
     matrix (0.4.2)
     mini_mime (1.1.5)
     minitest (5.24.1)
+    mqtt (0.6.0)
     msgpack (1.7.2)
     net-imap (0.4.14)
       date
@@ -294,6 +296,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  annotaterb
   bootsnap
   brakeman
   capybara
@@ -302,6 +305,7 @@ DEPENDENCIES
   error_highlight (>= 0.4.0)
   importmap-rails
   jbuilder
+  mqtt
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)
