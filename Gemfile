@@ -67,3 +67,4 @@ gem 'dotenv', groups: [:development, :test]
 
 # MQTT
 gem 'mqtt'
+gem "avo", ">= 3.2"

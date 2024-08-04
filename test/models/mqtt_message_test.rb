@@ -2,11 +2,13 @@
 #
 # Table name: mqtt_messages
 #
-#  id         :bigint           not null, primary key
-#  content    :text
-#  topic      :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id             :bigint           not null, primary key
+#  content        :text
+#  formatted_json :text
+#  friendly_name  :string
+#  topic          :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #
 # Indexes
 #

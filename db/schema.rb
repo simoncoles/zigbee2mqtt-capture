@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_08_04_170449) do
+ActiveRecord::Schema[7.2].define(version: 2024_08_04_174919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_08_04_170449) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "friendly_name"
+    t.text "formatted_json"
+    t.index ["friendly_name"], name: "index_mqtt_messages_on_friendly_name"
     t.index ["topic"], name: "index_mqtt_messages_on_topic"
   end
 end
