@@ -18,7 +18,10 @@ op inject --in-file 1Password.env --out-file .env
 
 Formatted JSON isn't nice
 Consider availability e.g. zigbee2mqtt/conservatory_presence/availability
-Alert of Home Assistant and Zigbee aren't connected
+Alert of Home Assistant and Zigbee aren't connected - do a HealthChecks.io for important things
+Also listen to Home Assistant messages - what are there?
+Something to cull zigbee2mqtt/conservatory_presence from the database
+
 
 
 ### Readme Template
