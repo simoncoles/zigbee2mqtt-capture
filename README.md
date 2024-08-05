@@ -22,6 +22,8 @@ Alert of Home Assistant and Zigbee aren't connected - do a HealthChecks.io for i
 Also listen to Home Assistant messages - what are there?
 Something to cull zigbee2mqtt/conservatory_presence from the database
 
+Add MQTT to the dev container
+Create a service to send example MQTT messages which have realistic timestamps
 
 
 ### Readme Template
