@@ -16,6 +16,22 @@ op inject --in-file 1Password.env --out-file .env
 
 ## To do
 
+Not all fields are coming through to the device
+Index on device_id 
+Run in a thread rather than have a runner
+
+Searching in Avo
+Query to see if X has been seen in the last Y minutes
+/seen?device=conservatory_presence&minutes=5
+
+Sort out database password in developmnent
+Deploy to production
+Add link to device in Avo
+Add this to messages     # add_reference :mqtt_messages, :device, null: false, foreign_key: true
+Clean up avo in terms or removing thigns
+Have a "Retention period" and number for each device
+
+
 Formatted JSON isn't nice
 Consider availability e.g. zigbee2mqtt/conservatory_presence/availability
 Alert of Home Assistant and Zigbee aren't connected - do a HealthChecks.io for important things

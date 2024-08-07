@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_08_07_180943) do
+ActiveRecord::Schema[7.2].define(version: 2024_08_07_211259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "devices", force: :cascade do |t|
+    t.string "friendly_name"
+    t.string "ieee_addr"
+    t.string "manufacturer_name"
+    t.string "model"
+    t.integer "network_address"
+    t.string "power_source"
+    t.string "device_type"
+    t.integer "zcl_version"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "mqtt_messages", force: :cascade do |t|
     t.string "topic"
@@ -22,6 +35,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_08_07_180943) do
     t.string "friendly_name"
     t.text "formatted_json"
     t.string "model"
+    t.bigint "device_id"
+    t.index ["device_id"], name: "index_mqtt_messages_on_device_id"
     t.index ["friendly_name"], name: "index_mqtt_messages_on_friendly_name"
     t.index ["topic"], name: "index_mqtt_messages_on_topic"
   end

@@ -6,14 +6,12 @@ class Avo::Resources::MqttMessage < Avo::BaseResource
   # }
 
   def fields
-    field :id, as: :id, sortable: true
-    field :topic, as: :text, sortable: true
-    field :created_at, as: :date_time, sortable: true
-    field :friendly_name, as: :text, sortable: true
-    field :model, as: :text, sortable: true
+    field :id, as: :id
+    field :topic, as: :text
     field :content, as: :textarea
-    field :formatted_json, as: :code
+    field :friendly_name, as: :text
+    field :formatted_json, as: :textarea
+    field :model, as: :text
+    field :device, as: :belongs_to, can_create: false
   end
-
-
 end
