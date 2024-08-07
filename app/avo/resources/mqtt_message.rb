@@ -10,6 +10,7 @@ class Avo::Resources::MqttMessage < Avo::BaseResource
     field :topic, as: :text, sortable: true
     field :created_at, as: :date_time, sortable: true
     field :friendly_name, as: :text, sortable: true
+    field :model, as: :text, sortable: true
     field :content, as: :textarea
     field :formatted_json, as: :code
   end

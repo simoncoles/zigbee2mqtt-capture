@@ -24,8 +24,13 @@ class MqttMessage < ApplicationRecord
       puts topic, message
       parsed_json = JSON.parse(message)
       friendlyName = parsed_json['device']['friendlyName']
+      model = parsed_json['device']['model']
       formatted_json = JSON.generate(parsed_json).lines.map(&:strip).join("\n")
-      MqttMessage.create(topic: topic, content: message, friendly_name: friendlyName, formatted_json: formatted_json)
+      MqttMessage.create(topic: topic,
+                         content: message,
+                         friendly_name: friendlyName,
+                         model: model,
+                         formatted_json: formatted_json)
     end
   end
 

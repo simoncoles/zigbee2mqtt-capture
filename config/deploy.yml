@@ -2,7 +2,7 @@
 service: zigbee2mqtt-capture
 
 # Name of the container image.
-image: user/my-app
+image: amphora/zigbee2mqtt-capture
 
 # Deploy to these servers.
 servers:
