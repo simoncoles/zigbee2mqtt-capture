@@ -4,8 +4,6 @@ source "https://rubygems.org"
 gem "rails", "~> 7.2.0.rc1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
-# Use postgresql as the database for Active Record
-gem "pg", "~> 1.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
@@ -69,6 +67,12 @@ gem 'dotenv', groups: [:development, :test]
 
 # MQTT
 gem 'mqtt'
+
+# Quick and easy admin interface
 gem "avo", ">= 3.2"
 
-gem 'kamal'
+# SQLite is the default database
+gem "sqlite3"
+# But we also support Postgres and MySQL
+gem "pg", "~> 1.1"
+gem "mysql2", "~> 0.5"

@@ -24,7 +24,7 @@ class MqttMessage < ApplicationRecord
 
   # Run with `rails runner MqttMessage.connect`
   def self.connect
-    client = MQTT::Client.connect(ENV['MQTT_URI'])
+    client = MQTT::Client.connect(ENV['MQTT_URL'])
     client.subscribe('zigbee2mqtt/+')
     client.get do |topic, message|
       puts topic, message
