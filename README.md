@@ -16,8 +16,10 @@ op inject --in-file 1Password.env --out-file .env
 
 ## To do
 
+I have many few Zigbee devices than I think I do
+
 Not all fields are coming through to the device
-Index on device_id 
+In device details Link back to http://192.168.2.3:8080/#/device/0xa4c13860a8539550/info
 Run in a thread rather than have a runner
 
 Searching in Avo
