@@ -1,5 +1,11 @@
 #!/bin/bash -e
 
+# We need 5 threads:
+# - 3 for the Puma server
+# - 1 for the MQTT listener
+# - 1 for the cron job (potentially)
+export RAILS_MAX_THREADS=5
+
 # Enable jemalloc for reduced memory usage and latency.
 if [ -z "${LD_PRELOAD+x}" ] && [ -f /usr/lib/*/libjemalloc.so.2 ]; then
   export LD_PRELOAD="$(echo /usr/lib/*/libjemalloc.so.2)"

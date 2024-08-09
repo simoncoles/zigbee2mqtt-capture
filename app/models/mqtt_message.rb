@@ -22,7 +22,7 @@ class MqttMessage < ApplicationRecord
 
   belongs_to :device
 
-  # Run with `rails runner MqttMessage.connect`
+  # To test run with `rails runner MqttMessage.connect`
   def self.connect
     client = MQTT::Client.connect(ENV['MQTT_URL'])
     client.subscribe('zigbee2mqtt/+')
@@ -66,6 +66,13 @@ class MqttMessage < ApplicationRecord
                          device_id: device.id,
                          )
     end
+  end
+
+  # Prune old messages older than PRUNE_HOURS
+  # To test run with `rails runner MqttMessage.prune`
+  def self.prune
+    prune_hours = ENV.fetch('PRUNE_HOURS', 48).to_i
+    MqttMessage.where('created_at < ?', prune_hours.hours.ago).delete_all
   end
 
 
