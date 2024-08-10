@@ -77,7 +77,7 @@ jobs:
 
         - name: Push Docker image to GitHub Container Registry
           run: |
-            docker tag your-image-name ghcr.io/${{ github.repository }}/zigbee2mqtt_capture:latest
+            docker tag zigbee2mqtt_capture ghcr.io/${{ github.repository }}/zigbee2mqtt_capture:latest
             docker push ghcr.io/${{ github.repository }}/zigbee2mqtt_capture:latest
 
     # services:
