@@ -8,7 +8,7 @@ require 'logger'
 # we need to wait until the MqttMessage class is loaded before we can call its methods
 def try_until_ready(&block)
   retries = 0
-  max_retries = 60 # Maximum number of retries to avoid infinite loop
+  max_retries = 600 # Maximum number of retries to avoid infinite loop
 
   while retries < max_retries
     begin
@@ -16,7 +16,7 @@ def try_until_ready(&block)
       break # Exit the loop if the block executes successfully
     rescue NameError => e
       if e.name == :const_missing && e.message.include?("MqttMessage")
-        logger.info("Waiting for the rest of the application to be loaded...")
+        logger.warn("Waiting for the rest of the application to be loaded...")
         sleep(1) # Wait for 1 second before retrying
         retries += 1
       else
@@ -25,6 +25,8 @@ def try_until_ready(&block)
     end
   end
 end
+
+sleep 5
 
 # The listener thread
 Thread.new do

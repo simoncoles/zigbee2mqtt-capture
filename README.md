@@ -25,14 +25,32 @@ This is intended to run on a private network, so there's no authentication. If y
 
 ### Pre-requisites
 
-To run this, you'll need to have a MQTT broker running. I'm using [RabbitMQ](https://www.rabbitmq.com/), 
-but you could use [Mosquitto](https://mosquitto.org/) or any other MQTT broker.
+To run this, you'll need to have a MQTT broker running. 
 
 You'll also need to have Zigbee2MQTT running and sending messages to your MQTT broker.
 
-The easiest way to get this running is to use Docker
-
 ### Docker
+
+The easiest way to get this running is to use Docker.
+
+The one environment variable you need to set is `MQTT_BROKER`. This should be the URL connection 
+string for your MQTT broker, which has the domain name/IP address, username, and password in (plus the ssl or not).
+
+To launch a Docker container with the `MQTT_BROKER` environment variable, you can use the following command:
+
+```bash
+docker run -e MQTT_BROKER=<your_mqtt_broker_url> ghcr.io/simoncoles/zigbee2mqtt-capture:main
+```
+
+Replace `<your_mqtt_broker_url>` with the URL connection string for your MQTT broker. Make sure to specify the appropriate image name for your Rails app.
+
+
+This is what works for me with my Zigbee2MQTT setup:
+
+```bash
+docker run -e MQTT_BROKER="mqtt://mqtt-test:mqtt-test@192.168.1.15:1883" ghcr.io/simoncoles/zigbee2mqtt-capture:main
+```
+
 
 ### Docker Compose
 

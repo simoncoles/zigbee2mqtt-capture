@@ -66,6 +66,9 @@ RUN groupadd --system --gid 1000 rails && \
     chown -R rails:rails db log storage tmp
 USER 1000:1000
 
+# This will apparently stop issues with SECRET_KEY_BASE
+ENV SECRET_KEY_BASE_DUMMY=1
+
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
