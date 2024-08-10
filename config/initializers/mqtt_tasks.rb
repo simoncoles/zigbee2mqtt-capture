@@ -23,7 +23,7 @@ def try_until_ready(&block)
       break # Exit the loop if the block executes successfully
     rescue NameError => e
       if e.name == :const_missing && e.message.include?("MqttMessage")
-        logger.error("Waiting for the rest of the application to be loaded...") if Rails.env.production?
+        # logger.error("Waiting for the rest of the application to be loaded...") if Rails.env.production?
         sleep(1) # Wait for 1 second before retrying
         retries += 1
       else
