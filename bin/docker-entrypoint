@@ -1,9 +1,7 @@
 #!/bin/bash -e
 
-# We need 4 threads:
-# - 3 for the Puma server
-# - 1 for the MQTT listener
-export RAILS_MAX_THREADS=4
+# We need 2 threads for background stuff as defined in mqtt_message.rb initialiser, plus Puma is set to 3.
+export RAILS_MAX_THREADS=6
 
 # Enable jemalloc for reduced memory usage and latency.
 if [ -z "${LD_PRELOAD+x}" ] && [ -f /usr/lib/*/libjemalloc.so.2 ]; then

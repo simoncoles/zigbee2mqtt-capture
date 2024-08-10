@@ -22,8 +22,8 @@ class MqttMessage < ApplicationRecord
 
   belongs_to :device
 
-  # To test run with `rails runner MqttMessage.connect`
-  def self.connect
+  # To test run with `rails runner MqttMessage.listen`
+  def self.listen
     client = MQTT::Client.connect(ENV['MQTT_URL'])
     client.subscribe('zigbee2mqtt/+', 'zigbee2mqtt/+/availability')
     client.get do |topic, message|
@@ -35,11 +35,11 @@ class MqttMessage < ApplicationRecord
       friendlyName = device_info['friendlyName']
       model = device_info['model']
       ieeeAddr = device_info['ieeeAddr']
-      manufacturer_name = device_info['manufacturer_name']
-      network_address = device_info['network_address']
-      power_source = device_info['power_source']
+      manufacturer_name = device_info['manufacturerName']
+      network_address = device_info['networkAddress']
+      power_source = device_info['powerSource']
       device_type = device_info['type']
-      zcl_version = device_info['zcl_version']
+      zcl_version = device_info['zclVersion']
 
 
       # Find or create the device
@@ -51,13 +51,14 @@ class MqttMessage < ApplicationRecord
         network_address: network_address,
         power_source: power_source,
         device_type: device_type,
-        zcl_version: zcl_version
+        zcl_version: zcl_version,
+        last_heard_from: Time.now,
       )
 
 
       friendlyName = parsed_json['device']['friendlyName']
       model = parsed_json['device']['model']
-      formatted_json = JSON.generate(parsed_json).lines.map(&:strip).join("\n")
+      formatted_json = JSON.pretty_generate(parsed_json)
       MqttMessage.create(topic: topic,
                          content: message,
                          friendly_name: friendlyName,
@@ -69,6 +70,13 @@ class MqttMessage < ApplicationRecord
       # Prune old messages for this device
       device.prune
     end
+  end
+
+  def self.prune_old
+    # Prune old messages once a minute
+    prune_hours = ENV.fetch('PRUNE_HOURS', 48).to_i
+    MqttMessage.where('created_at < ?', prune_hours.hours.ago).delete_all
+    sleep 60
   end
 
 

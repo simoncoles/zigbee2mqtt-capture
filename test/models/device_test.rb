@@ -7,6 +7,7 @@
 #  device_type       :string
 #  friendly_name     :string
 #  ieee_addr         :string
+#  last_heard_from   :datetime
 #  manufacturer_name :string
 #  model             :string
 #  network_address   :integer

@@ -19,8 +19,13 @@
 #
 # Any libraries that use a connection pool or another resource pool should
 # be configured to provide at least as many connections as the number of
-# threads. This includes Active Record's `pool` parameter in `database.yml`.
-threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
+# threads. This includes Active Record's `pool` parameter in `database.yml`
+
+# The normal number of threads is RAILS_MAX_THREADS and this is the normal
+# line. But we've got other threads doing things (MQTT listener, for example)
+# and limited web traffic, so set the threads to 3.
+# threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
+threads_count = 3
 threads threads_count, threads_count
 
 # Specifies the `environment` that Puma will run in.
