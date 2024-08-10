@@ -7,7 +7,7 @@ require 'logger'
 begin
   require 'app/models/mqtt_message.rb'
 rescue LoadError => e
-  logger.error "Failed to load MqttMessage: #{e.message}"
+  logger.error("Failed to load MqttMessage: #{e.message}")
 end
 
 # THis is a helper method to retry a block until it executes successfully
