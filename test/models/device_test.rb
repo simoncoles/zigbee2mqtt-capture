@@ -2,7 +2,8 @@
 #
 # Table name: devices
 #
-#  id                :bigint           not null, primary key
+#  id                :integer          not null, primary key
+#  capture_max       :integer
 #  device_type       :string
 #  friendly_name     :string
 #  ieee_addr         :string

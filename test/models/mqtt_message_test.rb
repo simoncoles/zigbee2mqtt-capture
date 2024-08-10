@@ -2,7 +2,7 @@
 #
 # Table name: mqtt_messages
 #
-#  id             :bigint           not null, primary key
+#  id             :integer          not null, primary key
 #  content        :text
 #  formatted_json :text
 #  friendly_name  :string

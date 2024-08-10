@@ -6,16 +6,22 @@ class Avo::Resources::Device < Avo::BaseResource
   # }
 
   def fields
-    field :id, as: :id
-    field :friendly_name, as: :text
-    field :ieee_addr, as: :text
-    field :manufacturer_name, as: :text
-    field :model, as: :text
-    field :network_address, as: :number
-    field :power_source, as: :text
-    field :device_type, as: :text
-    field :zcl_version, as: :number
-    field :mqtt_messages, as: :has_many
-
+    field :preview, as: :preview
+    field :id, as: :id, sortable: true
+    field :created_at, as: :date_time, sortable: true
+    field :friendly_name, as: :text, sortable: true
+    field :capture_max, as: :number, hide_on: [:index]
+    field :ieee_addr, as: :text, sortable: true, hide_on: [:index]
+    field :manufacturer_name, as: :text, sortable: true, hide_on: [:index]
+    field :model, as: :text, sortable: true
+    field :network_address, as: :number, sortable: true, hide_on: [:index]
+    field :power_source, as: :text, sortable: true, hide_on: [:index]
+    field :device_type, as: :text, sortable: true
+    field :zcl_version, as: :number, sortable: true, hide_on: [:index]
+    field :link_to_zigbee2mqtt, as: :text, hide_on: [:index] do
+        "#{ENV['ZIGBEE2MQTT_BASE']}/#/device/#{record.ieee_addr}/info"
+      end
+    field :mqtt_messages, as: :has_many, show_on: :preview
   end
+
 end

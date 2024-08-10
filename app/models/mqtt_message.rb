@@ -2,7 +2,7 @@
 #
 # Table name: mqtt_messages
 #
-#  id             :bigint           not null, primary key
+#  id             :integer          not null, primary key
 #  content        :text
 #  formatted_json :text
 #  friendly_name  :string
@@ -25,7 +25,7 @@ class MqttMessage < ApplicationRecord
   # To test run with `rails runner MqttMessage.connect`
   def self.connect
     client = MQTT::Client.connect(ENV['MQTT_URL'])
-    client.subscribe('zigbee2mqtt/+')
+    client.subscribe('zigbee2mqtt/+', 'zigbee2mqtt/+/availability')
     client.get do |topic, message|
       puts topic, message
       parsed_json = JSON.parse(message)
@@ -65,15 +65,12 @@ class MqttMessage < ApplicationRecord
                          formatted_json: formatted_json,
                          device_id: device.id,
                          )
+
+      # Prune old messages for this device
+      device.prune
     end
   end
 
-  # Prune old messages older than PRUNE_HOURS
-  # To test run with `rails runner MqttMessage.prune`
-  def self.prune
-    prune_hours = ENV.fetch('PRUNE_HOURS', 48).to_i
-    MqttMessage.where('created_at < ?', prune_hours.hours.ago).delete_all
-  end
 
 
 end
