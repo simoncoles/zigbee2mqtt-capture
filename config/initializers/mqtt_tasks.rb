@@ -33,20 +33,23 @@ def try_until_ready(&block)
   end
 end
 
+# Only run these tasks in production, we can do them in development manually
+if Rails.env.production?
 # The listener thread
-Thread.new do
-  try_until_ready do
-    Rails.application.executor.wrap do
-      MqttMessage.listen
+  Thread.new do
+    try_until_ready do
+      Rails.application.executor.wrap do
+        MqttMessage.listen
+      end
     end
   end
-end
 
 # The pruning thread
-Thread.new do
-  try_until_ready do
-    Rails.application.executor.wrap do
-      MqttMessage.prune_old
+  Thread.new do
+    try_until_ready do
+      Rails.application.executor.wrap do
+        MqttMessage.prune_old
+      end
     end
   end
 end
