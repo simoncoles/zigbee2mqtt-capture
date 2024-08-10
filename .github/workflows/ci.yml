@@ -5,6 +5,11 @@ on:
   push:
     branches: [ main ]
 
+# This is for the build & push stage
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   scan_ruby:
     runs-on: ubuntu-latest
