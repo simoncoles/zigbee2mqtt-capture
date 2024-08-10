@@ -3,6 +3,13 @@
 # We need the logger which might not be here yet
 require 'logger'
 
+# Having problems loading this so a bit more debugging
+begin
+  require 'app/models/mqtt_message.rb'
+rescue LoadError => e
+  logger.error "Failed to load MqttMessage: #{e.message}"
+end
+
 # THis is a helper method to retry a block until it executes successfully
 # As Rails will take a moment to load all of the application's classes,
 # we need to wait until the MqttMessage class is loaded before we can call its methods
@@ -16,7 +23,7 @@ def try_until_ready(&block)
       break # Exit the loop if the block executes successfully
     rescue NameError => e
       if e.name == :const_missing && e.message.include?("MqttMessage")
-        logger.warn("Waiting for the rest of the application to be loaded...")
+        logger.error("Waiting for the rest of the application to be loaded...")
         sleep(1) # Wait for 1 second before retrying
         retries += 1
       else
@@ -25,8 +32,6 @@ def try_until_ready(&block)
     end
   end
 end
-
-sleep 5
 
 # The listener thread
 Thread.new do
