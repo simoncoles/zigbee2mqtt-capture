@@ -1,11 +1,11 @@
 # Launches background tasks for listening to MQTT messages and pruning old ones
 
 # We need the logger which might not be here yet
-require 'logger'
+require "logger"
 
 # Having problems loading this so a bit more debugging
 begin
-  require 'app/models/mqtt_message.rb'
+  require "app/models/mqtt_message.rb"
 rescue LoadError => e
   puts("Failed to load MqttMessage: #{e.message}")
 end
@@ -35,7 +35,7 @@ end
 
 # Only run these tasks in production, we can do them in development manually
 if Rails.env.production?
-# The listener thread
+  # The listener thread
   Thread.new do
     try_until_ready do
       Rails.application.executor.wrap do
@@ -44,7 +44,7 @@ if Rails.env.production?
     end
   end
 
-# The pruning thread
+  # The pruning thread
   Thread.new do
     try_until_ready do
       Rails.application.executor.wrap do

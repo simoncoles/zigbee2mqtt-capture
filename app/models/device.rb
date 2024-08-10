@@ -33,7 +33,5 @@ class Device < ApplicationRecord
         end
       end
     end
-
   end
-
 end

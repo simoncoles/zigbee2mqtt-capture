@@ -63,10 +63,10 @@ group :test do
 end
 
 # For environment variables
-gem 'dotenv', groups: [:development, :test]
+gem "dotenv", groups: [ :development, :test ]
 
 # MQTT
-gem 'mqtt'
+gem "mqtt"
 
 # Quick and easy admin interface
 gem "avo", ">= 3.2"
