@@ -71,6 +71,7 @@ class MqttMessage < ApplicationRecord
     end
   end
 
+  #  To test run with `rails runner MqttMessage.prune_old`
   def self.prune_old
     # Prune old messages once a minute
     prune_hours = ENV.fetch("PRUNE_HOURS", 48).to_i
