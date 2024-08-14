@@ -76,3 +76,5 @@ gem "sqlite3"
 # But we also support Postgres and MySQL
 gem "pg", "~> 1.1"
 gem "mysql2", "~> 0.5"
+
+gem 'lograge'
