@@ -26,7 +26,7 @@ class MqttMessage < ApplicationRecord
     client = MQTT::Client.connect(ENV["MQTT_URL"])
     client.subscribe("zigbee2mqtt/+", "zigbee2mqtt/+/availability")
     client.get do |topic, message|
-      puts topic, message
+      Rails.logger.info("#{topic}, #{message}")
       parsed_json = JSON.parse(message)
 
       #  Get device information
