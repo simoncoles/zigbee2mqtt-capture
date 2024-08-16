@@ -77,4 +77,4 @@ gem "sqlite3"
 gem "pg", "~> 1.1"
 gem "mysql2", "~> 0.5"
 
-gem 'lograge'
+gem "lograge"
