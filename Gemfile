@@ -77,4 +77,8 @@ gem "sqlite3"
 gem "pg", "~> 1.1"
 gem "mysql2", "~> 0.5"
 
+# Sensible logging
 gem "lograge"
+
+# Error reporting
+gem "appsignal"
