@@ -33,7 +33,7 @@ You'll also need to have Zigbee2MQTT running and sending messages to your MQTT b
 
 The easiest way to get this running is to use Docker.
 
-The one environment variable you need to set is `MQTT_BROKER`. This should be the URL connection 
+The one environment variable you have to set is `MQTT_BROKER`. This should be the URL connection 
 string for your MQTT broker, which has the domain name/IP address, username, and password in (plus the ssl or not).
 
 To launch a Docker container with the `MQTT_BROKER` environment variable, you can use the following command:
@@ -62,7 +62,15 @@ desired location and edit the environment variables as needed.
 
 ## Configuration
 
-There isn't much. 
+There isn't much and it is all done with environment variables.
+
+- DATABASE_URL is your database connection string. It can be a Postgres or MySQL database, or if you specify nothing, it'll use SQLite.
+- ZIGBEE2MQTT_BASE is your Zigbee2MQTT base URL which will be used to generate links to the Zigbee2MQTT web interface.
+- APPSIGNAL_PUSH_API_KEY if you want to use AppSignal, this is your AppSignal API key.
+- FORCE_THREADS=YES if you want to force the background threads to run. This is useful if want to force the threads to launch
+  at startup in development. Otherwise, ignore this. 
+- MQTT_URL is your MQTT broker URL.
+- PRUNE_HOURS is how many hours old messages should be pruned. 9000 is a year. Default is 48 hours. 
 
 
 ## Upgrades
