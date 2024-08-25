@@ -42,9 +42,9 @@ class MqttMessage < ApplicationRecord
 
 
       # Find or create the device
-      device = Device.find_or_create_by(friendly_name: friendlyName)
+      device = Device.find_or_create_by(ieee_addr: ieeeAddr)
       device.update(
-        ieee_addr: ieeeAddr,
+        friendly_name: friendlyName,
         manufacturer_name: manufacturer_name,
         model: model,
         network_address: network_address,
