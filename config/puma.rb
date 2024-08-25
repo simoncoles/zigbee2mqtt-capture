@@ -23,9 +23,9 @@
 
 # The normal number of threads is RAILS_MAX_THREADS and this is the normal
 # line. But we've got other threads doing things (MQTT listener, for example)
-# and limited web traffic, so set the threads to 3.
+# and limited web traffic, so set the threads to 5.
 # threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
-threads_count = 3
+threads_count = 5
 threads threads_count, threads_count
 
 # Specifies the `environment` that Puma will run in.
