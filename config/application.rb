@@ -1,5 +1,7 @@
 require_relative "boot"
 
+# So we can launch background threads
+# See https://guides.rubyonrails.org/configuring.html#running-code-before-rails
 require "rails/all"
 
 # Require the gems listed in Gemfile, including any gems
