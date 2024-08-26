@@ -8,7 +8,7 @@
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.2.5
-FROM docker.io/library/ruby:$RUBY_VERSION-slim as base
+FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 # Rails app lives here
 WORKDIR /rails
@@ -28,7 +28,7 @@ ENV RAILS_ENV="production" \
     BUNDLE_WITHOUT="development"
 
 # Throw-away build stage to reduce size of final image
-FROM base as build
+FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
@@ -67,7 +67,8 @@ RUN groupadd --system --gid 1000 rails && \
 USER 1000:1000
 
 # This will apparently stop issues with SECRET_KEY_BASE
-ENV SECRET_KEY_BASE_DUMMY=1
+# But it's set in the GitHub secrets, to avoid a Dockerfile linting warning
+# ENV SECRET_KEY_BASE_DUMMY=1
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
