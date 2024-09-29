@@ -16,6 +16,10 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
+# Indexes
+#
+#  index_devices_on_ieee_addr  (ieee_addr) UNIQUE
+#
 require "test_helper"
 
 class DeviceTest < ActiveSupport::TestCase

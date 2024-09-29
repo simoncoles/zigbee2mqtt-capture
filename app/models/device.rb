@@ -16,8 +16,13 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
+# Indexes
+#
+#  index_devices_on_ieee_addr  (ieee_addr) UNIQUE
+#
 class Device < ApplicationRecord
-  has_many :mqtt_messages
+  has_many :mqtt_messages, dependent: :destroy
+  has_many :readings, dependent: :destroy
 
   # Prune messages inexcess of capture_max
   def prune

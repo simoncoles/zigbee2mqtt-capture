@@ -21,6 +21,8 @@ class Avo::Resources::Device < Avo::BaseResource
     field :link_to_zigbee2mqtt, as: :text, hide_on: [ :index ] do
         "#{ENV['ZIGBEE2MQTT_BASE']}/#/device/#{record.ieee_addr}/info"
       end
-    field :mqtt_messages, as: :has_many, show_on: :preview
-  end
+    field :mqtt_messages, as: :has_many
+    field :readings, as: :has_many, show_on: :preview
+    end
+  self.title = :friendly_name
 end

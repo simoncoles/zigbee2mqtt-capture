@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_08_11_094712) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_29_104954) do
   create_table "devices", force: :cascade do |t|
     t.string "friendly_name"
     t.string "ieee_addr"
@@ -40,4 +40,18 @@ ActiveRecord::Schema[7.2].define(version: 2024_08_11_094712) do
     t.index ["friendly_name"], name: "index_mqtt_messages_on_friendly_name"
     t.index ["topic"], name: "index_mqtt_messages_on_topic"
   end
+
+  create_table "readings", force: :cascade do |t|
+    t.string "key"
+    t.string "value"
+    t.integer "mqtt_message_id", null: false
+    t.integer "device_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["device_id"], name: "index_readings_on_device_id"
+    t.index ["mqtt_message_id"], name: "index_readings_on_mqtt_message_id"
+  end
+
+  add_foreign_key "readings", "devices"
+  add_foreign_key "readings", "mqtt_messages"
 end

@@ -14,5 +14,7 @@ class Avo::Resources::MqttMessage < Avo::BaseResource
     field :formatted_json, as: :code, language: "json", show_on: :preview
     field :model, as: :text, sortable: true
     field :device, as: :belongs_to, can_create: false, hide_on: [ :index ]
+    field :readings, as: :has_many
   end
+  self.title = :topic
 end
