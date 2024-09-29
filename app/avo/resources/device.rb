@@ -18,9 +18,9 @@ class Avo::Resources::Device < Avo::BaseResource
     field :power_source, as: :text, hide_on: [ :index ]
     field :device_type, as: :text, sortable: true
     field :zcl_version, as: :number, hide_on: [ :index ]
-    field :link_to_zigbee2mqtt, as: :text, hide_on: [ :index ] do
-        "#{ENV['ZIGBEE2MQTT_BASE']}/#/device/#{record.ieee_addr}/info"
-      end
+    field :link_to_zigbee2mqtt, as: :text, hide_on: [ :index ], as_html: true do
+      "<a href='#{ENV['ZIGBEE2MQTT_BASE']}/#/device/#{record.ieee_addr}/info' target='_blank'>#{ENV['ZIGBEE2MQTT_BASE']}/#/device/#{record.ieee_addr}/info</a>"
+    end
     field :mqtt_messages, as: :has_many
     field :readings, as: :has_many, show_on: :preview
     end
