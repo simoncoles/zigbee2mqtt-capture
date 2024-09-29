@@ -16,12 +16,13 @@ then just throwing away the container and data.
 
 If you want it to run longer you might want to use Postgres as the database.
 
-## No authentication!
+
+## No authentication!
 
 This is intended to run on a private network, so there's no authentication. If you expose this to the internet, you'll want to add some authentication.
 
 
-## Running the Application
+## Running the Application
 
 ### Pre-requisites
 
@@ -64,16 +65,16 @@ desired location and edit the environment variables as needed.
 
 There isn't much and it is all done with environment variables.
 
-- DATABASE_URL is your database connection string. It can be a Postgres or MySQL database, or if you specify nothing, it'll use SQLite.
-- ZIGBEE2MQTT_BASE is your Zigbee2MQTT base URL which will be used to generate links to the Zigbee2MQTT web interface.
-- APPSIGNAL_PUSH_API_KEY if you want to use AppSignal, this is your AppSignal API key.
-- FORCE_THREADS=YES if you want to force the background threads to run. This is useful if want to force the threads to launch
+- `DATABASE_URL` is your database connection string. It can be a Postgres or MySQL database, or if you specify nothing, it'll use SQLite.
+- `ZIGBEE2MQTT_BASE` is your Zigbee2MQTT base URL which will be used to generate links to the Zigbee2MQTT web interface.
+- `APPSIGNAL_PUSH_API_KEY` if you want to use AppSignal, this is your AppSignal API key.
+- `FORCE_THREADS=YES` if you want to force the background threads to run. This is useful if want to force the threads to launch
   at startup in development. Otherwise, ignore this. 
-- MQTT_URL is your MQTT broker URL.
-- PRUNE_HOURS is how many hours old messages should be pruned. 9000 is a year. Default is 48 hours. 
+- `MQTT_URL` is your MQTT broker URL.
+- `PRUNE_HOURS` is how many hours old messages should be pruned. 9000 is a year. Default is 48 hours. 
 
 
-## Upgrades
+## Upgrades
 
 If you want to preserve your data over upgrades, you'll need to do one of:
 
@@ -91,3 +92,19 @@ database. That doesn't make much sense, and ideally that would be prevented.
 
 If you want to keep an eye on errors, you can use [AppSignal](https://appsignal.com/). 
 Set the environment variable `APPSIGNAL_PUSH_API_KEY` to your AppSignal API key.
+
+## Development
+
+There's a Dev Container setup for use with Github Codespaces or VS Code, Cursor etc. 
+
+I have a `.env` file in my repository with the following:
+
+```bash
+MQTT_URL="mqtt://mqtt-user:mqtt-pass@192.1.1.2:1883"
+ZIGBEE2MQTT_BASE="http://192.1.1.1:8080"
+```
+
+To run the web app in the dev container, you can run `rails server`.
+
+To run the MQTT listener, you can run `rails runner MqttMessage.listen`.
+
