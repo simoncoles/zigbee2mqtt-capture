@@ -81,7 +81,7 @@ GEM
       logger
       rack
     ast (2.4.2)
-    avo (3.12.0)
+    avo (3.13.2)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -136,7 +136,7 @@ GEM
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
     io-console (0.7.2)
-    irb (1.14.0)
+    irb (1.14.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jbuilder (2.13.0)
@@ -161,7 +161,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.2)
-    meta-tags (2.22.0)
+    meta-tags (2.22.1)
       actionpack (>= 6.0.0, < 8.1)
     method_source (1.1.0)
     mini_mime (1.1.5)
@@ -191,7 +191,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
-    pagy (9.0.8)
+    pagy (9.0.9)
     parallel (1.26.1)
     parser (3.3.4.2)
       ast (~> 2.4.1)
@@ -317,7 +317,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
     useragent (0.16.10)
-    view_component (3.14.0)
+    view_component (3.16.0)
       activesupport (>= 5.2.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
