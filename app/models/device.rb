@@ -34,6 +34,9 @@ class Device < ApplicationRecord
       # Delete messages not included in kept_messages
       mqtt_messages.each do |message|
         unless kept_messages.include?(message.id)
+          # Remove associated readings first
+          message.readings.destroy_all
+          # And then remove the message itself
           message.destroy
         end
       end
