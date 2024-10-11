@@ -81,7 +81,7 @@ GEM
       logger
       rack
     ast (2.4.2)
-    avo (3.13.3)
+    avo (3.13.6)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -89,9 +89,9 @@ GEM
       addressable
       docile
       inline_svg
-      literal (~> 0.2)
       meta-tags
       pagy (>= 7.0.0)
+      prop_initializer (>= 0.2.0)
       turbo-rails (>= 2.0.0)
       turbo_power (>= 0.6.0)
       view_component (>= 3.7.0)
@@ -144,7 +144,6 @@ GEM
       activesupport (>= 5.0.0)
     json (2.7.2)
     language_server-protocol (3.17.0.3)
-    literal (0.2.1)
     logger (1.6.1)
     lograge (0.14.0)
       actionpack (>= 4)
@@ -191,12 +190,14 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
-    pagy (9.0.9)
+    pagy (9.1.0)
     parallel (1.26.1)
     parser (3.3.4.2)
       ast (~> 2.4.1)
       racc
     pg (1.5.8)
+    prop_initializer (0.2.0)
+      zeitwerk (>= 2.6.18)
     propshaft (1.1.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
@@ -317,7 +318,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
     useragent (0.16.10)
-    view_component (3.16.0)
+    view_component (3.17.0)
       activesupport (>= 5.2.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -333,7 +334,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.18)
+    zeitwerk (2.7.0)
 
 PLATFORMS
   aarch64-linux
