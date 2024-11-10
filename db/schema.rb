@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_29_104954) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_10_125210) do
   create_table "devices", force: :cascade do |t|
     t.string "friendly_name"
     t.string "ieee_addr"

@@ -82,3 +82,6 @@ gem "lograge"
 
 # Error reporting
 gem "appsignal"
+
+# Deployment
+gem "kamal"
