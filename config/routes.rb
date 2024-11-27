@@ -30,7 +30,7 @@
 #                       rails_health_check GET    /up(.:format)                                                                                     rails/health#show
 #                       pwa_service_worker GET    /service-worker(.:format)                                                                         rails/pwa#service_worker
 #                             pwa_manifest GET    /manifest(.:format)                                                                               rails/pwa#manifest
-#                                     root GET    /                                                                                                 avo/mqtt_messages#index
+#                                     root GET    /                                                                                                 madmin/dashboard#show
 #         turbo_recede_historical_location GET    /recede_historical_location(.:format)                                                             turbo/native/navigation#recede
 #         turbo_resume_historical_location GET    /resume_historical_location(.:format)                                                             turbo/native/navigation#resume
 #        turbo_refresh_historical_location GET    /refresh_historical_location(.:format)                                                            turbo/native/navigation#refresh
