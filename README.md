@@ -83,11 +83,6 @@ If you want to preserve your data over upgrades, you'll need to do one of:
 
 TODO When the server runs it'll create or migrate the database.
 
-## Limitations
-
-This is using the free version of Avo which doesn't allow the controls to be customised, so you're able to create, edit, and delete items in the
-database. That doesn't make much sense, and ideally that would be prevented.
-
 ## AppSignal
 
 If you want to keep an eye on errors, you can use [AppSignal](https://appsignal.com/). 
@@ -108,3 +103,4 @@ To run the web app in the dev container, you can run `rails server`.
 
 To run the MQTT listener, you can run `rails runner MqttMessage.listen`.
 
+Admin interface is https://github.com/excid3/madmin 

@@ -170,6 +170,11 @@ GEM
     loofah (2.23.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
+    madmin (2.0.0)
+      importmap-rails
+      pagy (>= 3.5)
+      propshaft
+      rails (>= 7.0.0)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -384,6 +389,7 @@ DEPENDENCIES
   jbuilder
   kamal
   lograge
+  madmin (~> 2.0)
   mqtt
   mysql2 (~> 0.5)
   pg (~> 1.5)

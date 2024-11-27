@@ -68,9 +68,6 @@ gem "dotenv", groups: [ :development, :test ]
 # MQTT
 gem "mqtt"
 
-# Quick and easy admin interface
-gem "avo", ">= 3.2"
-
 # SQLite is the default database
 gem "sqlite3"
 # But we also support Postgres and MySQL
@@ -85,3 +82,6 @@ gem "appsignal"
 
 # Deployment
 gem "kamal"
+
+# Quick and easy admin interface
+gem "madmin", "~> 2.0"
