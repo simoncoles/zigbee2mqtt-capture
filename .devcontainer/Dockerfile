@@ -2,5 +2,6 @@
 ARG RUBY_VERSION=3.2.5
 FROM ghcr.io/rails/devcontainer/images/ruby:$RUBY_VERSION
 
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends sqlite3
+# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+#     && apt-get -y install --no-install-recommends sqlite3
+
