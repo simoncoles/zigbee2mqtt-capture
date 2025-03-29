@@ -10,6 +10,11 @@ class ReadingResource < Madmin::Resource
   attribute :mqtt_message
   attribute :device
 
+  # Show key and value in index
+  def self.index_attributes
+    [ :key, :value, :device ]
+  end
+
   # Add scopes to easily filter records
   # scope :published
 
