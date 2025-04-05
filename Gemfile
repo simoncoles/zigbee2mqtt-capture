@@ -86,4 +86,4 @@ gem "kamal"
 # Quick and easy admin interface
 gem "madmin", "~> 2.0"
 
-gem 'motor-admin'
+gem "motor-admin"
