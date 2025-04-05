@@ -228,7 +228,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_29_203133) do
     t.string "friendly_name"
     t.text "formatted_json"
     t.string "model"
-    t.bigint "device_id"
+    t.integer "device_id"
     t.index ["device_id"], name: "index_mqtt_messages_on_device_id"
     t.index ["friendly_name"], name: "index_mqtt_messages_on_friendly_name"
     t.index ["topic"], name: "index_mqtt_messages_on_topic"
