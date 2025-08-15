@@ -54,6 +54,9 @@ group :development do
 
   # Annotate things
   gem "annotaterb"
+  
+  # Process management for development
+  gem "foreman"
 end
 
 group :test do

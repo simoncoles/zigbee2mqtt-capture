@@ -99,8 +99,13 @@ MQTT_URL="mqtt://mqtt-user:mqtt-pass@192.1.1.2:1883"
 ZIGBEE2MQTT_BASE="http://192.1.1.1:8080"
 ```
 
-To run the web app in the dev container, you can run `rails server`.
+To run everything use the convenience script `bin/dev`.
 
-To run the MQTT listener, you can run `rails runner MqttMessage.listen`.
+This will start the web app and the MQTT listener.
 
-Admin interface is https://github.com/excid3/madmin 
+To start things individually:
+
+- To run the web app, you can run `rails server`.
+- To run the MQTT listener, you can run `rails runner MqttMessage.listen`.
+
+Admin interface is using https://github.com/excid3/madmin 
