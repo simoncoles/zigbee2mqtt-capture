@@ -87,4 +87,4 @@ gem "appsignal"
 gem "kamal"
 
 # Quick and easy admin interface
-gem "madmin", "~> 2.0"
+gem "madmin", "~> 2.1"
