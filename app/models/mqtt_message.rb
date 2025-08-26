@@ -26,7 +26,7 @@ class MqttMessage < ApplicationRecord
   def self.listen
     Rails.logger.info("Connecting to MQTT broker at: #{ENV['MQTT_URL']}")
     client = MQTT::Client.connect(ENV["MQTT_URL"])
-    client.subscribe("zigbee2mqtt/+", "zigbee2mqtt/+/availability")
+    client.subscribe("zigbee2mqtt/+", "zigbee2mqtt/+/availability", "zigbee2mqtt/+/set")
     client.get do |topic, message|
       Rails.logger.info("#{topic}, #{message}")
       parsed_json = JSON.parse(message)
