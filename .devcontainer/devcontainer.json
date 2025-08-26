@@ -13,6 +13,10 @@
     "ghcr.io/rails/devcontainer/features/postgres-client": {}, 
     "ghcr.io/rails/devcontainer/features/mysql-client": {},
     "ghcr.io/itsmechlark/features/1password:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "nodeGypDependencies": true
+    }
   },
 
   "containerEnv": {
@@ -33,5 +37,5 @@
 
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "bin/setup"
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && npm install -g @openai/codex && bin/setup"
 }

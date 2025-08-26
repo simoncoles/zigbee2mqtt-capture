@@ -5,3 +5,5 @@ FROM ghcr.io/rails/devcontainer/images/ruby:$RUBY_VERSION
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends sqlite3
 
+# Note: npm packages are installed via postCreateCommand in devcontainer.json
+# because npm is available only after the Node.js feature is installed
