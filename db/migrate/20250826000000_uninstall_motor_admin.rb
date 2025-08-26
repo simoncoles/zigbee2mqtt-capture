@@ -23,4 +23,3 @@ class UninstallMotorAdmin < ActiveRecord::Migration[8.0]
     raise ActiveRecord::IrreversibleMigration, "Cannot automatically recreate Motor Admin tables"
   end
 end
-
