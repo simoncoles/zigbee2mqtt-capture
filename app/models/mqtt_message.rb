@@ -24,6 +24,7 @@ class MqttMessage < ApplicationRecord
 
   #  To test run with `rails runner MqttMessage.listen`
   def self.listen
+    Rails.logger.info("Connecting to MQTT broker at: #{ENV['MQTT_URL']}")
     client = MQTT::Client.connect(ENV["MQTT_URL"])
     client.subscribe("zigbee2mqtt/+", "zigbee2mqtt/+/availability")
     client.get do |topic, message|
