@@ -383,6 +383,7 @@ DEPENDENCIES
   mqtt
   mysql2 (~> 0.5)
   pg (~> 1.5)
+  prism (~> 1.4)
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.0)

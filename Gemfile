@@ -54,7 +54,7 @@ group :development do
 
   # Annotate things
   gem "annotaterb"
-  
+
   # Process management for development
   gem "foreman"
 end
@@ -88,3 +88,5 @@ gem "kamal"
 
 # Quick and easy admin interface
 gem "madmin", "~> 2.0"
+
+gem "prism", "~> 1.4"
