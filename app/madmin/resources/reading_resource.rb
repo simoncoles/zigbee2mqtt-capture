@@ -7,8 +7,8 @@ class ReadingResource < Madmin::Resource
   attribute :updated_at, form: false
 
   # Associations
+  attribute :device, index: true
   attribute :mqtt_message
-  attribute :device
 
   # Show key and value in index
   def self.index_attributes

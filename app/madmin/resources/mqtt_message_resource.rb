@@ -5,7 +5,7 @@ class MqttMessageResource < Madmin::Resource
   attribute :content
   attribute :created_at, form: false
   attribute :updated_at, form: false
-  attribute :friendly_name
+  attribute :friendly_name, index: true
   attribute :formatted_json
   attribute :model
 

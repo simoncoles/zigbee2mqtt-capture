@@ -1,7 +1,7 @@
 class DeviceResource < Madmin::Resource
   # Attributes
   attribute :id, form: false
-  attribute :friendly_name
+  attribute :friendly_name, index: true
   attribute :ieee_addr
   attribute :manufacturer_name
   attribute :model
@@ -9,10 +9,10 @@ class DeviceResource < Madmin::Resource
   attribute :power_source
   attribute :device_type
   attribute :zcl_version
-  attribute :created_at, form: false
+  attribute :created_at, form: false, index: false
   attribute :updated_at, form: false
   attribute :capture_max
-  attribute :last_heard_from
+  attribute :last_heard_from, index: true
 
   # Associations
   attribute :mqtt_messages
