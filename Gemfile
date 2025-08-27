@@ -90,3 +90,6 @@ gem "kamal"
 gem "madmin", "~> 2.0"
 
 gem "prism", "~> 1.4"
+
+# Tailwind CSS for styling
+gem "tailwindcss-rails"

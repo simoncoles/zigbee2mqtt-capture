@@ -1,0 +1,217 @@
+<div class="w-full max-w-7xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Device Monitoring Dashboard</h1>
+    <p class="text-gray-600">Real-time status of your Zigbee devices</p>
+  </div>
+  
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div class="text-center">
+        <p class="text-sm font-medium text-gray-600 mb-2">Total Devices</p>
+        <p class="text-3xl font-bold text-gray-900"><%= @stats[:total_devices] %></p>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div class="text-center">
+        <p class="text-sm font-medium text-gray-600 mb-2">Monitored</p>
+        <p class="text-3xl font-bold text-blue-600"><%= @stats[:monitored_devices] %></p>
+      </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-sm border border-green-200 p-4">
+      <div class="text-center">
+        <p class="text-sm font-medium text-green-700 mb-2">Responsive</p>
+        <p class="text-3xl font-bold text-green-800"><%= @stats[:responsive_devices] %></p>
+      </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg shadow-sm border border-amber-200 p-4">
+      <div class="text-center">
+        <p class="text-sm font-medium text-amber-700 mb-2">Non-Responsive</p>
+        <p class="text-3xl font-bold text-amber-800"><%= @stats[:non_responsive_devices] %></p>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <div class="text-center">
+        <p class="text-sm font-medium text-gray-600 mb-2">Disabled</p>
+        <p class="text-3xl font-bold text-gray-500"><%= @stats[:monitoring_disabled] %></p>
+      </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-sm border border-blue-200 p-4">
+      <div class="text-center">
+        <p class="text-sm font-medium text-blue-700 mb-2">Response Rate</p>
+        <p class="text-3xl font-bold text-blue-800"><%= @stats[:response_rate] %>%</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Non-Responsive Devices Table -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-900">
+          Non-Responsive Devices
+        </h2>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+          <%= @non_responsive_devices.count %> device<%= 's' if @non_responsive_devices.count != 1 %>
+        </span>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <% if @non_responsive_devices.any? %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Device
+                </th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Last Heard
+                </th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Time Exceeded
+                </th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Threshold
+                </th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Alert Since
+                </th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @non_responsive_devices.each do |device| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-3 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-600">
+                      ⚠️
+                    </span>
+                  </td>
+                  <td class="px-3 py-4">
+                    <div>
+                      <div class="text-sm font-medium text-gray-900">
+                        <%= device.friendly_name || device.ieee_addr %>
+                      </div>
+                      <div class="text-sm text-gray-500">
+                        <%= device.model %>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap">
+                    <% if device.last_heard_from %>
+                      <div class="text-sm text-gray-900">
+                        <%= time_ago_in_words(device.last_heard_from) %> ago
+                      </div>
+                      <div class="text-xs text-gray-500">
+                        <%= device.last_heard_from.strftime("%Y-%m-%d %H:%M") %>
+                      </div>
+                    <% else %>
+                      <span class="text-sm text-gray-400">Never</span>
+                    <% end %>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      +<%= device.hours_exceeded.round(1) %> hours
+                    </span>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <%= device.alert_threshold_hours %> hours
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap">
+                    <% if device.last_alert_at %>
+                      <div class="text-sm text-gray-900">
+                        <%= time_ago_in_words(device.last_alert_at) %> ago
+                      </div>
+                    <% else %>
+                      <span class="text-sm text-gray-400">-</span>
+                    <% end %>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm">
+                    <div class="flex space-x-2">
+                      <%= link_to device_monitoring_path(device), 
+                          class: "inline-flex items-center px-3 py-1 border border-blue-300 rounded-md text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors duration-150",
+                          title: "View device details" do %>
+                        Details
+                      <% end %>
+                      
+                      <%= link_to reset_monitoring_path(device), 
+                          method: :post,
+                          data: { turbo_method: :post },
+                          class: "inline-flex items-center px-3 py-1 border border-cyan-300 rounded-md text-sm font-medium text-cyan-700 bg-cyan-50 hover:bg-cyan-100 transition-colors duration-150",
+                          title: "Mark as responsive" do %>
+                        Reset
+                      <% end %>
+                      
+                      <%= link_to toggle_monitoring_path(device, enabled: false), 
+                          method: :post,
+                          data: { turbo_method: :post },
+                          class: "inline-flex items-center px-3 py-1 border border-amber-300 rounded-md text-sm font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors duration-150",
+                          title: "Disable monitoring" do %>
+                        Disable
+                      <% end %>
+                      
+                      <%= link_to madmin_device_path(device), 
+                          class: "inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-150",
+                          target: "_blank" do %>
+                        Admin
+                      <% end %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-green-800">
+                All devices are responsive!
+              </h3>
+              <div class="mt-2 text-sm text-green-700">
+                <p>No devices are currently exceeding their alert thresholds.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Navigation -->
+  <div class="flex justify-between items-center mt-8">
+    <%= link_to madmin_root_path, 
+        class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-150" do %>
+      <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to Admin
+    <% end %>
+    
+    <%= link_to monitoring_index_path, 
+        class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-150" do %>
+      <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      Refresh
+    <% end %>
+  </div>
+</div>

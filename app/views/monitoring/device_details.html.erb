@@ -1,0 +1,300 @@
+<div class="w-full max-w-7xl mx-auto">
+  <div class="mb-8">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <h1 class="text-3xl font-bold text-gray-900">Device Monitoring Details</h1>
+        <% if @device.monitoring_enabled? %>
+          <% if @device.is_responsive? %>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+              ✅ Responsive
+            </span>
+          <% else %>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+              ⚠️ Non-Responsive
+            </span>
+          <% end %>
+        <% else %>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+            🔕 Monitoring Disabled
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Device Information and Monitoring Configuration -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Device Information Card -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">Device Information</h2>
+      </div>
+      <div class="p-6">
+        <dl class="space-y-4">
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Friendly Name</dt>
+            <dd class="text-sm text-gray-900 font-medium"><%= @device.friendly_name || "-" %></dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">IEEE Address</dt>
+            <dd class="text-sm text-gray-900"><code class="bg-gray-100 px-2 py-1 rounded"><%= @device.ieee_addr %></code></dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Model</dt>
+            <dd class="text-sm text-gray-900"><%= @device.model || "-" %></dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Manufacturer</dt>
+            <dd class="text-sm text-gray-900"><%= @device.manufacturer_name || "-" %></dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Power Source</dt>
+            <dd class="text-sm text-gray-900"><%= @device.power_source || "-" %></dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Device Type</dt>
+            <dd class="text-sm text-gray-900"><%= @device.device_type || "-" %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+    
+    <!-- Monitoring Configuration Card -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">Monitoring Configuration</h2>
+      </div>
+      <div class="p-6">
+        <dl class="space-y-4">
+          <div class="flex justify-between items-center">
+            <dt class="text-sm font-medium text-gray-500">Monitoring Enabled</dt>
+            <dd class="flex items-center space-x-3">
+              <span class="text-sm text-gray-900"><%= @device.monitoring_enabled? ? "✅ Yes" : "❌ No" %></span>
+              <% if @device.monitoring_enabled? %>
+                <%= link_to "Disable", toggle_monitoring_path(@device, enabled: false), 
+                    method: :post,
+                    data: { turbo_method: :post },
+                    class: "inline-flex items-center px-3 py-1 border border-amber-300 rounded-md text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 transition-colors duration-150" %>
+              <% else %>
+                <%= link_to "Enable", toggle_monitoring_path(@device, enabled: true), 
+                    method: :post,
+                    data: { turbo_method: :post },
+                    class: "inline-flex items-center px-3 py-1 border border-green-300 rounded-md text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 transition-colors duration-150" %>
+              <% end %>
+            </dd>
+          </div>
+          <div class="flex justify-between items-center">
+            <dt class="text-sm font-medium text-gray-500">Alert Threshold</dt>
+            <dd class="flex items-center space-x-3">
+              <span class="text-sm text-gray-900"><%= @device.alert_threshold_hours %> hours</span>
+              <%= link_to "Recalculate", recalculate_threshold_monitoring_path(@device),
+                  method: :post,
+                  data: { turbo_method: :post },
+                  class: "inline-flex items-center px-3 py-1 border border-blue-300 rounded-md text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors duration-150",
+                  title: "Recalculate based on recent messages" %>
+            </dd>
+          </div>
+          <div class="flex justify-between items-center">
+            <dt class="text-sm font-medium text-gray-500">Is Responsive</dt>
+            <dd class="flex items-center space-x-3">
+              <span class="text-sm text-gray-900"><%= @device.is_responsive? ? "✅ Yes" : "⚠️ No" %></span>
+              <% unless @device.is_responsive? %>
+                <%= link_to "Reset Alert", reset_monitoring_path(@device),
+                    method: :post,
+                    data: { turbo_method: :post },
+                    class: "inline-flex items-center px-3 py-1 border border-cyan-300 rounded-md text-xs font-medium text-cyan-700 bg-cyan-50 hover:bg-cyan-100 transition-colors duration-150" %>
+              <% end %>
+            </dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Last Heard From</dt>
+            <dd class="text-sm text-gray-900">
+              <% if @device.last_heard_from %>
+                <div><%= time_ago_in_words(@device.last_heard_from) %> ago</div>
+                <div class="text-xs text-gray-500"><%= @device.last_heard_from.strftime("%Y-%m-%d %H:%M:%S") %></div>
+              <% else %>
+                <span class="text-gray-400">Never</span>
+              <% end %>
+            </dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Time Since Last Message</dt>
+            <dd class="text-sm text-gray-900">
+              <%= @device.time_since_last_message.round(2) %> hours
+              <% if @device.alert_threshold_exceeded? %>
+                <span class="text-red-600 text-xs">(Exceeded by <%= @device.hours_exceeded.round(2) %> hours)</span>
+              <% end %>
+            </dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Last Alert At</dt>
+            <dd class="text-sm text-gray-900">
+              <% if @device.last_alert_at %>
+                <div><%= time_ago_in_words(@device.last_alert_at) %> ago</div>
+                <div class="text-xs text-gray-500"><%= @device.last_alert_at.strftime("%Y-%m-%d %H:%M:%S") %></div>
+              <% else %>
+                <span class="text-gray-400">-</span>
+              <% end %>
+            </dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Last Checked At</dt>
+            <dd class="text-sm text-gray-900">
+              <% if @device.last_checked_at %>
+                <%= time_ago_in_words(@device.last_checked_at) %> ago
+              <% else %>
+                <span class="text-gray-400">-</span>
+              <% end %>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Message Statistics -->
+  <% if @avg_interval %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">Message Frequency Statistics</h2>
+      </div>
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div class="bg-blue-50 rounded-lg p-4">
+            <p class="text-sm font-medium text-blue-600 mb-1">Average Interval</p>
+            <p class="text-2xl font-bold text-blue-900"><%= @avg_interval %> hours</p>
+          </div>
+          <div class="bg-green-50 rounded-lg p-4">
+            <p class="text-sm font-medium text-green-600 mb-1">Min Interval</p>
+            <p class="text-2xl font-bold text-green-900"><%= @min_interval %> hours</p>
+          </div>
+          <div class="bg-amber-50 rounded-lg p-4">
+            <p class="text-sm font-medium text-amber-600 mb-1">Max Interval</p>
+            <p class="text-2xl font-bold text-amber-900"><%= @max_interval %> hours</p>
+          </div>
+        </div>
+        <p class="text-sm text-gray-500">
+          Based on last 10 messages. Current threshold: <%= @device.alert_threshold_hours %> hours (suggested: ~<%= (@avg_interval * 2).round(1) %> hours based on average)
+        </p>
+      </div>
+    </div>
+  <% end %>
+  
+  <!-- Recent Messages -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">Recent Messages (Last 20)</h2>
+    </div>
+    <div class="p-6">
+      <% if @recent_messages.any? %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Topic</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message Preview</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @recent_messages.each do |message| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-3 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900"><%= message.created_at.strftime("%Y-%m-%d %H:%M:%S") %></div>
+                    <div class="text-xs text-gray-500"><%= time_ago_in_words(message.created_at) %> ago</div>
+                  </td>
+                  <td class="px-3 py-4">
+                    <code class="bg-gray-100 px-2 py-1 rounded text-xs"><%= message.topic %></code>
+                  </td>
+                  <td class="px-3 py-4">
+                    <code class="bg-gray-100 px-2 py-1 rounded text-xs"><%= truncate(message.content, length: 100) %></code>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap">
+                    <%= link_to "View", madmin_mqtt_message_path(message), 
+                        class: "inline-flex items-center px-3 py-1 border border-blue-300 rounded-md text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors duration-150",
+                        target: "_blank" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-gray-500 text-center py-8">No messages found for this device.</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Recent Readings -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">Recent Sensor Readings (Last 50)</h2>
+    </div>
+    <div class="p-6">
+      <% if @recent_readings.any? %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sensor</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @recent_readings.each do |reading| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-3 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900"><%= reading.created_at.strftime("%Y-%m-%d %H:%M:%S") %></div>
+                    <div class="text-xs text-gray-500"><%= time_ago_in_words(reading.created_at) %> ago</div>
+                  </td>
+                  <td class="px-3 py-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                      <%= reading.key %>
+                    </span>
+                  </td>
+                  <td class="px-3 py-4 text-sm text-gray-900">
+                    <%= reading.value %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-gray-500 text-center py-8">No sensor readings found for this device.</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Navigation -->
+  <div class="flex justify-between items-center mb-8">
+    <div class="flex space-x-3">
+      <%= link_to monitoring_index_path, 
+          class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-150" do %>
+        <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Monitoring
+      <% end %>
+      
+      <%= link_to madmin_device_path(@device), 
+          class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-150",
+          target: "_blank" do %>
+        <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+        View in Admin
+      <% end %>
+    </div>
+    
+    <%= link_to device_monitoring_path(@device), 
+        class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-150" do %>
+      <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      Refresh
+    <% end %>
+  </div>
+</div>

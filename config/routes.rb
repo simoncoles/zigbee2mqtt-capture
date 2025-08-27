@@ -70,6 +70,13 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
+  # Monitoring routes
+  get "/monitoring", to: "monitoring#index", as: :monitoring_index
+  get "/monitoring/device/:id", to: "monitoring#device_details", as: :device_monitoring
+  post "/monitoring/device/:id/toggle", to: "monitoring#toggle_monitoring", as: :toggle_monitoring
+  post "/monitoring/device/:id/reset", to: "monitoring#reset_device", as: :reset_monitoring
+  post "/monitoring/device/:id/recalculate", to: "monitoring#recalculate_threshold", as: :recalculate_threshold_monitoring
+
   # Defines the root path route ("/")
   root to: "madmin/dashboard#show"
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_26_000000) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_26_190622) do
   create_table "devices", force: :cascade do |t|
     t.string "friendly_name"
     t.string "ieee_addr"
@@ -24,7 +24,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_26_000000) do
     t.datetime "updated_at", null: false
     t.integer "capture_max"
     t.datetime "last_heard_from"
+    t.decimal "alert_threshold_hours", precision: 10, scale: 2
+    t.boolean "monitoring_enabled", default: true
+    t.datetime "last_alert_at"
+    t.boolean "is_responsive", default: true
+    t.datetime "last_checked_at"
     t.index ["ieee_addr"], name: "index_devices_on_ieee_addr", unique: true
+    t.index ["is_responsive"], name: "index_devices_on_is_responsive"
+    t.index ["monitoring_enabled"], name: "index_devices_on_monitoring_enabled"
   end
 
   create_table "mqtt_messages", force: :cascade do |t|
