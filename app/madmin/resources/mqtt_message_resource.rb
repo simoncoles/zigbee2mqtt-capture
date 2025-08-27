@@ -6,7 +6,8 @@ class MqttMessageResource < Madmin::Resource
   attribute :created_at, form: false
   attribute :updated_at, form: false
   attribute :friendly_name, index: true
-  attribute :formatted_json
+  # Display formatted JSON as a monospaced, multiline block
+  attribute :formatted_json_pre
   attribute :model
 
   # Associations

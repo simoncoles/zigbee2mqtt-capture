@@ -22,7 +22,7 @@ class MqttMessage < ApplicationRecord
   belongs_to :device
   has_many :readings, dependent: :destroy
 
-  #  To test run with `rails runner MqttMessage.listen`
+  #  To test run with `rails runner MqttMessage.listen`
   def self.listen
     Rails.logger.info("Connecting to MQTT broker at: #{ENV['MQTT_URL']}")
     client = MQTT::Client.connect(ENV["MQTT_URL"])
@@ -134,5 +134,13 @@ class MqttMessage < ApplicationRecord
       # Do it again in an hour
       sleep 3600
     end
+  end
+
+  # Render formatted_json as a safe, multiline, monospaced block for admin views
+  def formatted_json_pre
+    return "" unless formatted_json.present?
+
+    escaped = ERB::Util.html_escape(formatted_json)
+    "<pre class=\"font-mono whitespace-pre-wrap text-sm p-3 bg-gray-50 rounded border\">#{escaped}</pre>".html_safe
   end
 end
