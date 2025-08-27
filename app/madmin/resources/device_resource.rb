@@ -13,7 +13,7 @@ class DeviceResource < Madmin::Resource
   attribute :updated_at, form: false
   attribute :capture_max
   attribute :last_heard_from, index: true
-  
+
   # Monitoring attributes
   attribute :alert_threshold_hours
   attribute :monitoring_enabled
@@ -33,23 +33,23 @@ class DeviceResource < Madmin::Resource
   # Add actions to the resource's show page
   member_action do |record|
     if record.monitoring_enabled?
-      link_to "Disable Monitoring", 
+      link_to "Disable Monitoring",
               madmin_device_path(record, device: { monitoring_enabled: false }),
               method: :patch,
               class: "btn btn-sm btn-warning",
               data: { turbo_method: :patch }
     else
-      link_to "Enable Monitoring", 
+      link_to "Enable Monitoring",
               madmin_device_path(record, device: { monitoring_enabled: true }),
               method: :patch,
               class: "btn btn-sm btn-success",
               data: { turbo_method: :patch }
     end
   end
-  
+
   member_action do |record|
     if record.alert_threshold_exceeded?
-      link_to "Reset Alert", 
+      link_to "Reset Alert",
               madmin_device_path(record, device: { is_responsive: true, last_alert_at: nil }),
               method: :patch,
               class: "btn btn-sm btn-info",
@@ -61,11 +61,11 @@ class DeviceResource < Madmin::Resource
   def self.display_name(record)
     status = if !record.monitoring_enabled?
                "🔕"
-             elsif record.is_responsive?
+    elsif record.is_responsive?
                "✅"
-             else
+    else
                "⚠️"
-             end
+    end
     "#{status} #{record.friendly_name || record.ieee_addr}"
   end
 
