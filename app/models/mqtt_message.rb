@@ -28,6 +28,38 @@ class MqttMessage < ApplicationRecord
     client = MQTT::Client.connect(ENV["MQTT_URL"])
     client.subscribe("zigbee2mqtt/+", "zigbee2mqtt/+/availability", "zigbee2mqtt/+/set")
     client.get do |topic, message|
+      # Handle /set topics by stripping the suffix and processing as normal device message
+      if topic.end_with?("/set")
+        device_topic = topic.gsub(/\/set$/, "")
+        Rails.logger.info("Received /set command for device topic: #{device_topic}")
+        Rails.logger.info("Command payload: #{message}")
+
+        # Extract the device friendly name from the topic
+        # Topic format is typically: zigbee2mqtt/device_friendly_name/set
+        topic_parts = topic.split("/")
+        if topic_parts.length >= 2
+          friendly_name = topic_parts[1]
+
+          # Find the device by friendly name
+          device = Device.find_by(friendly_name: friendly_name)
+
+          if device
+            Rails.logger.info("Found device: #{device.friendly_name} (IEEE: #{device.ieee_addr})")
+
+            # Forward the command to the device via MQTT publish
+            # Publishing to the device topic without /set will send the command to the device
+            client.publish(device_topic, message)
+            Rails.logger.info("Forwarded command to device topic: #{device_topic}")
+          else
+            Rails.logger.warn("Device not found for friendly_name: #{friendly_name}")
+          end
+        else
+          Rails.logger.warn("Invalid topic format: #{topic}")
+        end
+
+        next
+      end
+
       Rails.logger.info("#{topic}, #{message}")
       parsed_json = JSON.parse(message)
 
