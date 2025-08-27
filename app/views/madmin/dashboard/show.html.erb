@@ -1,0 +1,243 @@
+<div class="w-full max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Zigbee2MQTT Dashboard</h1>
+    <p class="text-gray-600">Monitor your Zigbee devices and system activity</p>
+  </div>
+  
+  <!-- Monitoring Stats Cards -->
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold text-gray-900 mb-4">Device Monitoring</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div class="text-center">
+          <p class="text-sm font-medium text-gray-600 mb-2">Total Devices</p>
+          <p class="text-3xl font-bold text-gray-900"><%= @stats[:total_devices] %></p>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div class="text-center">
+          <p class="text-sm font-medium text-gray-600 mb-2">Monitored</p>
+          <p class="text-3xl font-bold text-blue-600"><%= @stats[:monitored_devices] %></p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-sm border border-green-200 p-4">
+        <div class="text-center">
+          <p class="text-sm font-medium text-green-700 mb-2">Responsive</p>
+          <p class="text-3xl font-bold text-green-800"><%= @stats[:responsive_devices] %></p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg shadow-sm border border-amber-200 p-4">
+        <div class="text-center">
+          <p class="text-sm font-medium text-amber-700 mb-2">Non-Responsive</p>
+          <p class="text-3xl font-bold text-amber-800"><%= @stats[:non_responsive_devices] %></p>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div class="text-center">
+          <p class="text-sm font-medium text-gray-600 mb-2">Disabled</p>
+          <p class="text-3xl font-bold text-gray-500"><%= @stats[:monitoring_disabled] %></p>
+        </div>
+      </div>
+      
+      <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-sm border border-blue-200 p-4">
+        <div class="text-center">
+          <p class="text-sm font-medium text-blue-700 mb-2">Response Rate</p>
+          <p class="text-3xl font-bold text-blue-800"><%= @stats[:response_rate] %>%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Non-Responsive Devices Alert -->
+  <% if @non_responsive_devices.any? %>
+    <div class="mb-8">
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-200 text-amber-600 text-sm font-bold">!</span>
+          </div>
+          <div class="ml-3 flex-1">
+            <h3 class="text-sm font-medium text-amber-800">
+              Non-Responsive Devices Detected
+            </h3>
+            <div class="mt-2 text-sm text-amber-700">
+              <p><%= @non_responsive_devices.count %> device<%= 's' if @non_responsive_devices.count != 1 %> <%= @non_responsive_devices.count == 1 ? 'is' : 'are' %> not responding within their configured thresholds.</p>
+            </div>
+            <div class="mt-4">
+              <%= link_to monitoring_index_path, 
+                  class: "text-sm font-medium text-amber-800 hover:text-amber-900 underline" do %>
+                View all non-responsive devices →
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  
+  <!-- Quick Actions and Data Tables -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900">Quick Actions</h2>
+      </div>
+      <div class="p-6">
+        <div class="space-y-3">
+          <%= link_to monitoring_index_path, 
+              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">📊</span>
+              <span class="text-sm font-medium text-gray-900">Device Monitoring Dashboard</span>
+            </div>
+            <span class="text-gray-400">→</span>
+          <% end %>
+          
+          <%= link_to madmin_devices_path, 
+              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">📱</span>
+              <span class="text-sm font-medium text-gray-900">Manage Devices</span>
+            </div>
+            <span class="text-gray-400">→</span>
+          <% end %>
+          
+          <%= link_to madmin_mqtt_messages_path, 
+              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">💬</span>
+              <span class="text-sm font-medium text-gray-900">MQTT Messages</span>
+            </div>
+            <span class="text-gray-400">→</span>
+          <% end %>
+          
+          <%= link_to madmin_readings_path, 
+              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">📈</span>
+              <span class="text-sm font-medium text-gray-900">Sensor Readings</span>
+            </div>
+            <span class="text-gray-400">→</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recent MQTT Messages -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-gray-900">Recent MQTT Messages</h2>
+          <%= link_to "View all", madmin_mqtt_messages_path, 
+              class: "text-sm text-blue-600 hover:text-blue-800" %>
+        </div>
+      </div>
+      <div class="p-6">
+        <% if @recent_messages.any? %>
+          <div class="space-y-3">
+            <% @recent_messages.first(5).each do |message| %>
+              <div class="flex items-start space-x-3 text-sm">
+                <div class="flex-shrink-0">
+                  <span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-blue-400 mt-1.5"></span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-gray-900 font-medium truncate">
+                    <%= message.topic %>
+                  </p>
+                  <p class="text-gray-500 text-xs">
+                    <%= time_ago_in_words(message.created_at) %> ago
+                  </p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-sm text-gray-500">No recent messages</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Recent Sensor Readings -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-8">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-900">Recent Sensor Readings</h2>
+        <%= link_to "View all", madmin_readings_path, 
+            class: "text-sm text-blue-600 hover:text-blue-800" %>
+      </div>
+    </div>
+    <div class="p-6">
+      <% if @recent_readings.any? %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sensor</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @recent_readings.each do |reading| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-3 py-4 whitespace-nowrap text-sm">
+                    <% if reading.device %>
+                      <%= link_to reading.device.friendly_name || reading.device.ieee_addr, 
+                          madmin_device_path(reading.device),
+                          class: "text-blue-600 hover:text-blue-800" %>
+                    <% else %>
+                      <span class="text-gray-400">Unknown</span>
+                    <% end %>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                      <%= reading.key %>
+                    </span>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <%= reading.value %>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= time_ago_in_words(reading.created_at) %> ago
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">No recent sensor readings</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- System Status -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">System Status</h2>
+    </div>
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <p class="text-sm font-medium text-gray-500 mb-1">Total MQTT Messages</p>
+          <p class="text-2xl font-bold text-gray-900"><%= MqttMessage.count %></p>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500 mb-1">Total Sensor Readings</p>
+          <p class="text-2xl font-bold text-gray-900"><%= Reading.count %></p>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500 mb-1">Messages Today</p>
+          <p class="text-2xl font-bold text-gray-900"><%= MqttMessage.where(created_at: Date.current.all_day).count %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
