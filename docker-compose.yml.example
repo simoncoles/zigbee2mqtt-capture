@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Database service (if using PostgreSQL in production)
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: zigbee2mqtt_capture_production
+      POSTGRES_USER: zigbee2mqtt
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zigbee2mqtt"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Web application server
+  web:
+    build: .
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgresql://zigbee2mqtt:${DB_PASSWORD}@db/zigbee2mqtt_capture_production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      MQTT_BROKER: ${MQTT_BROKER:-localhost}
+      MQTT_PORT: ${MQTT_PORT:-1883}
+      MQTT_USERNAME: ${MQTT_USERNAME}
+      MQTT_PASSWORD: ${MQTT_PASSWORD}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ./bin/rails server -b 0.0.0.0
+    restart: unless-stopped
+    volumes:
+      - ./storage:/rails/storage
+
+  # MQTT listener process
+  mqtt:
+    build: .
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgresql://zigbee2mqtt:${DB_PASSWORD}@db/zigbee2mqtt_capture_production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      MQTT_BROKER: ${MQTT_BROKER:-localhost}
+      MQTT_PORT: ${MQTT_PORT:-1883}
+      MQTT_USERNAME: ${MQTT_USERNAME}
+      MQTT_PASSWORD: ${MQTT_PASSWORD}
+      PRUNE_HOURS: ${PRUNE_HOURS:-48}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ./bin/rails runner "MqttMessage.listen"
+    restart: unless-stopped
+
+  # Device monitoring process
+  monitor:
+    build: .
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgresql://zigbee2mqtt:${DB_PASSWORD}@db/zigbee2mqtt_capture_production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      MONITOR_ENABLED: ${MONITOR_ENABLED:-true}
+      MONITOR_CHECK_INTERVAL: ${MONITOR_CHECK_INTERVAL:-300}
+      MONITOR_BATCH_SIZE: ${MONITOR_BATCH_SIZE:-50}
+      MONITOR_DEBUG: ${MONITOR_DEBUG:-false}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ./bin/rails runner "DeviceMonitorProcess.run"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

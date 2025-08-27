@@ -1,0 +1,152 @@
+<div class="container-fluid mt-4">
+  <h1 class="mb-4">Device Monitoring Dashboard</h1>
+  
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Total Devices</h5>
+          <p class="display-4"><%= @stats[:total_devices] %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Monitored</h5>
+          <p class="display-4"><%= @stats[:monitored_devices] %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center bg-success text-white">
+        <div class="card-body">
+          <h5 class="card-title">Responsive</h5>
+          <p class="display-4"><%= @stats[:responsive_devices] %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center bg-warning">
+        <div class="card-body">
+          <h5 class="card-title">Non-Responsive</h5>
+          <p class="display-4"><%= @stats[:non_responsive_devices] %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Disabled</h5>
+          <p class="display-4"><%= @stats[:monitoring_disabled] %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card text-center bg-info text-white">
+        <div class="card-body">
+          <h5 class="card-title">Response Rate</h5>
+          <p class="display-4"><%= @stats[:response_rate] %>%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Non-Responsive Devices Table -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="mb-0">
+        Non-Responsive Devices 
+        <span class="badge bg-warning"><%= @non_responsive_devices.count %></span>
+      </h3>
+    </div>
+    <div class="card-body">
+      <% if @non_responsive_devices.any? %>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Device</th>
+                <th>Last Heard</th>
+                <th>Time Exceeded</th>
+                <th>Threshold</th>
+                <th>Alert Since</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @non_responsive_devices.each do |device| %>
+                <tr>
+                  <td>
+                    <span class="badge bg-warning">⚠️</span>
+                  </td>
+                  <td>
+                    <strong><%= device.friendly_name || device.ieee_addr %></strong>
+                    <br>
+                    <small class="text-muted"><%= device.model %></small>
+                  </td>
+                  <td>
+                    <% if device.last_heard_from %>
+                      <%= time_ago_in_words(device.last_heard_from) %> ago
+                      <br>
+                      <small class="text-muted"><%= device.last_heard_from.strftime("%Y-%m-%d %H:%M") %></small>
+                    <% else %>
+                      <span class="text-muted">Never</span>
+                    <% end %>
+                  </td>
+                  <td>
+                    <span class="text-danger">
+                      +<%= device.hours_exceeded.round(1) %> hours
+                    </span>
+                  </td>
+                  <td>
+                    <%= device.alert_threshold_hours %> hours
+                  </td>
+                  <td>
+                    <% if device.last_alert_at %>
+                      <%= time_ago_in_words(device.last_alert_at) %> ago
+                    <% else %>
+                      -
+                    <% end %>
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                      <%= link_to "Details", device_monitoring_path(device), 
+                          class: "btn btn-outline-primary" %>
+                      <%= link_to "Reset", reset_monitoring_path(device), 
+                          method: :post,
+                          data: { turbo_method: :post },
+                          class: "btn btn-outline-info",
+                          title: "Mark as responsive" %>
+                      <%= link_to "Disable", toggle_monitoring_path(device, enabled: false), 
+                          method: :post,
+                          data: { turbo_method: :post },
+                          class: "btn btn-outline-warning",
+                          title: "Disable monitoring" %>
+                      <%= link_to "Admin", madmin_device_path(device), 
+                          class: "btn btn-outline-secondary",
+                          target: "_blank" %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="alert alert-success">
+          <h4 class="alert-heading">All devices are responsive!</h4>
+          <p>No devices are currently exceeding their alert thresholds.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Navigation -->
+  <div class="mt-3">
+    <%= link_to "← Back to Admin", madmin_path, class: "btn btn-secondary" %>
+    <%= link_to "Refresh", monitoring_index_path, class: "btn btn-primary" %>
+  </div>
+</div>

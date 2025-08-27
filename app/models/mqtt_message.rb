@@ -53,6 +53,7 @@ class MqttMessage < ApplicationRecord
         device_type: device_type,
         zcl_version: zcl_version,
         last_heard_from: Time.now,
+        is_responsive: true  # Reset responsive status when we hear from device
       )
 
       friendlyName = parsed_json["device"]["friendlyName"]

@@ -1,0 +1,262 @@
+<div class="container-fluid mt-4">
+  <h1 class="mb-4">
+    Device Monitoring Details
+    <% if @device.monitoring_enabled? %>
+      <% if @device.is_responsive? %>
+        <span class="badge bg-success">✅ Responsive</span>
+      <% else %>
+        <span class="badge bg-warning">⚠️ Non-Responsive</span>
+      <% end %>
+    <% else %>
+      <span class="badge bg-secondary">🔕 Monitoring Disabled</span>
+    <% end %>
+  </h1>
+  
+  <!-- Device Information Card -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3>Device Information</h3>
+        </div>
+        <div class="card-body">
+          <table class="table table-sm">
+            <tr>
+              <th width="40%">Friendly Name:</th>
+              <td><%= @device.friendly_name || "-" %></td>
+            </tr>
+            <tr>
+              <th>IEEE Address:</th>
+              <td><code><%= @device.ieee_addr %></code></td>
+            </tr>
+            <tr>
+              <th>Model:</th>
+              <td><%= @device.model || "-" %></td>
+            </tr>
+            <tr>
+              <th>Manufacturer:</th>
+              <td><%= @device.manufacturer_name || "-" %></td>
+            </tr>
+            <tr>
+              <th>Power Source:</th>
+              <td><%= @device.power_source || "-" %></td>
+            </tr>
+            <tr>
+              <th>Device Type:</th>
+              <td><%= @device.device_type || "-" %></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h3>Monitoring Configuration</h3>
+        </div>
+        <div class="card-body">
+          <table class="table table-sm">
+            <tr>
+              <th width="40%">Monitoring Enabled:</th>
+              <td>
+                <%= @device.monitoring_enabled? ? "✅ Yes" : "❌ No" %>
+                <% if @device.monitoring_enabled? %>
+                  <%= link_to "Disable", toggle_monitoring_path(@device, enabled: false), 
+                      method: :post,
+                      data: { turbo_method: :post },
+                      class: "btn btn-sm btn-warning float-end" %>
+                <% else %>
+                  <%= link_to "Enable", toggle_monitoring_path(@device, enabled: true), 
+                      method: :post,
+                      data: { turbo_method: :post },
+                      class: "btn btn-sm btn-success float-end" %>
+                <% end %>
+              </td>
+            </tr>
+            <tr>
+              <th>Alert Threshold:</th>
+              <td>
+                <%= @device.alert_threshold_hours %> hours
+                <%= link_to "Recalculate", recalculate_threshold_monitoring_path(@device),
+                    method: :post,
+                    data: { turbo_method: :post },
+                    class: "btn btn-sm btn-info float-end",
+                    title: "Recalculate based on recent messages" %>
+              </td>
+            </tr>
+            <tr>
+              <th>Is Responsive:</th>
+              <td>
+                <%= @device.is_responsive? ? "✅ Yes" : "⚠️ No" %>
+                <% unless @device.is_responsive? %>
+                  <%= link_to "Reset Alert", reset_monitoring_path(@device),
+                      method: :post,
+                      data: { turbo_method: :post },
+                      class: "btn btn-sm btn-info float-end" %>
+                <% end %>
+              </td>
+            </tr>
+            <tr>
+              <th>Last Heard From:</th>
+              <td>
+                <% if @device.last_heard_from %>
+                  <%= time_ago_in_words(@device.last_heard_from) %> ago
+                  <br>
+                  <small class="text-muted"><%= @device.last_heard_from.strftime("%Y-%m-%d %H:%M:%S") %></small>
+                <% else %>
+                  <span class="text-muted">Never</span>
+                <% end %>
+              </td>
+            </tr>
+            <tr>
+              <th>Time Since Last Message:</th>
+              <td>
+                <%= @device.time_since_last_message.round(2) %> hours
+                <% if @device.alert_threshold_exceeded? %>
+                  <span class="text-danger">(Exceeded by <%= @device.hours_exceeded.round(2) %> hours)</span>
+                <% end %>
+              </td>
+            </tr>
+            <tr>
+              <th>Last Alert At:</th>
+              <td>
+                <% if @device.last_alert_at %>
+                  <%= time_ago_in_words(@device.last_alert_at) %> ago
+                  <br>
+                  <small class="text-muted"><%= @device.last_alert_at.strftime("%Y-%m-%d %H:%M:%S") %></small>
+                <% else %>
+                  <span class="text-muted">-</span>
+                <% end %>
+              </td>
+            </tr>
+            <tr>
+              <th>Last Checked At:</th>
+              <td>
+                <% if @device.last_checked_at %>
+                  <%= time_ago_in_words(@device.last_checked_at) %> ago
+                <% else %>
+                  <span class="text-muted">-</span>
+                <% end %>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Message Statistics -->
+  <% if @avg_interval %>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3>Message Frequency Statistics</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <strong>Average Interval:</strong> <%= @avg_interval %> hours
+          </div>
+          <div class="col-md-4">
+            <strong>Min Interval:</strong> <%= @min_interval %> hours
+          </div>
+          <div class="col-md-4">
+            <strong>Max Interval:</strong> <%= @max_interval %> hours
+          </div>
+        </div>
+        <div class="mt-2">
+          <small class="text-muted">Based on last 10 messages. Current threshold: <%= @device.alert_threshold_hours %> hours (should be ~<%= @avg_interval * 2 %> hours based on average)</small>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  
+  <!-- Recent Messages -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3>Recent Messages (Last 20)</h3>
+    </div>
+    <div class="card-body">
+      <% if @recent_messages.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Topic</th>
+                <th>Message Preview</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @recent_messages.each do |message| %>
+                <tr>
+                  <td>
+                    <%= message.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
+                    <br>
+                    <small class="text-muted"><%= time_ago_in_words(message.created_at) %> ago</small>
+                  </td>
+                  <td><code><%= message.topic %></code></td>
+                  <td>
+                    <code><%= truncate(message.content, length: 100) %></code>
+                  </td>
+                  <td>
+                    <%= link_to "View", madmin_mqtt_message_path(message), 
+                        class: "btn btn-sm btn-outline-primary",
+                        target: "_blank" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted">No messages found for this device.</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Recent Readings -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3>Recent Sensor Readings (Last 50)</h3>
+    </div>
+    <div class="card-body">
+      <% if @recent_readings.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm table-hover">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Sensor</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @recent_readings.each do |reading| %>
+                <tr>
+                  <td>
+                    <%= reading.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
+                    <br>
+                    <small class="text-muted"><%= time_ago_in_words(reading.created_at) %> ago</small>
+                  </td>
+                  <td><strong><%= reading.key %></strong></td>
+                  <td><%= reading.value %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted">No sensor readings found for this device.</p>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Navigation -->
+  <div class="mb-4">
+    <%= link_to "← Back to Monitoring", monitoring_index_path, class: "btn btn-secondary" %>
+    <%= link_to "View in Admin", madmin_device_path(@device), class: "btn btn-primary", target: "_blank" %>
+    <%= link_to "Refresh", device_monitoring_path(@device), class: "btn btn-info" %>
+  </div>
+</div>
