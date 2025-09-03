@@ -74,7 +74,7 @@ gem "mqtt"
 # SQLite is the default database
 gem "sqlite3"
 # But we also support Postgres and MySQL
-gem "pg", "~> 1.5"
+gem "pg", "~> 1.6"
 gem "mysql2", "~> 0.5"
 
 # Sensible logging
