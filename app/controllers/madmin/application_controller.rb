@@ -1,5 +1,6 @@
 module Madmin
   class ApplicationController < Madmin::BaseController
+    layout "application"
     before_action :authenticate_admin_user
 
     def authenticate_admin_user
@@ -11,5 +12,7 @@ module Madmin
       # Or with Devise
       # redirect_to "/", alert: "Not authorized." unless current_user&.admin?
     end
+
+    private
   end
 end

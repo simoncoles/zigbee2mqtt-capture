@@ -42,3 +42,105 @@
   padding: 2px 4px;
   border-radius: 3px;
 }
+
+/* Madmin generic styling (scoped to /madmin pages) */
+.madmin h1 {
+  font-size: 1.875rem; /* text-3xl */
+  line-height: 2.25rem;
+  font-weight: 700;
+  color: #111827; /* gray-900 */
+  margin-bottom: 1rem;
+}
+
+.madmin h2 {
+  font-size: 1.25rem; /* text-xl */
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 1.25rem 0 0.75rem;
+}
+
+.madmin .actions a,
+.madmin a.button,
+.madmin input[type="submit"],
+.madmin button {
+  display: inline-block;
+  padding: 0.5rem 0.75rem; /* px-3 py-2 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500;
+  color: #fff;
+  background-color: #2563eb; /* blue-600 */
+  border: 1px solid #1d4ed8; /* blue-700 */
+  border-radius: 0.375rem; /* rounded-md */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.madmin .actions a:hover,
+.madmin a.button:hover,
+.madmin input[type="submit"]:hover,
+.madmin button:hover {
+  background-color: #1d4ed8; /* blue-700 */
+}
+
+.madmin table {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-collapse: collapse;
+}
+
+.madmin th,
+.madmin td {
+  padding: 0.75rem; /* p-3 */
+  border-top: 1px solid #e5e7eb; /* gray-200 */
+  text-align: left;
+  vertical-align: middle;
+}
+
+.madmin thead th {
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 600; /* font-medium */
+  color: #6b7280; /* gray-500 */
+  text-transform: uppercase;
+  letter-spacing: .05em; /* tracking-wider */
+  background-color: #f9fafb; /* gray-50 */
+  border-top: none;
+}
+
+.madmin tbody tr:hover {
+  background-color: #f9fafb; /* gray-50 */
+}
+
+.madmin .field label,
+.madmin label {
+  display: block;
+  font-size: 0.875rem;
+  color: #6b7280; /* gray-500 */
+  margin-bottom: 0.25rem;
+}
+
+.madmin input[type="text"],
+.madmin input[type="number"],
+.madmin input[type="search"],
+.madmin input[type="email"],
+.madmin input[type="password"],
+.madmin input[type="datetime-local"],
+.madmin select,
+.madmin textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem; /* px-3 py-2 */
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 0.375rem; /* rounded-md */
+  background-color: #fff;
+}
+
+.madmin .notice,
+.madmin .alert {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+}
+
+.madmin .notice { background-color: #ecfeff; border: 1px solid #a5f3fc; color: #155e75; }
+.madmin .alert { background-color: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }

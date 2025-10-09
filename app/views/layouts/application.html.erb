@@ -18,7 +18,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="<%= controller_path&.start_with?("madmin/") ? "madmin" : nil %>">
     <main class="container mx-auto mt-8 px-5">
       <%= yield %>
     </main>
