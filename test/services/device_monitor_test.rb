@@ -88,6 +88,29 @@ class DeviceMonitorTest < ActiveSupport::TestCase
     assert_equal 0, stats[:response_rate]
   end
 
+  # -- recalculate_all_thresholds --
+
+  test "recalculate_all_thresholds updates monitored device thresholds" do
+    device = devices(:motion_sensor)
+    original_threshold = device.alert_threshold_hours
+    device.update_column(:alert_threshold_hours, 999.0)
+
+    DeviceMonitor.recalculate_all_thresholds
+    device.reload
+
+    assert_not_equal 999.0, device.alert_threshold_hours
+  end
+
+  test "recalculate_all_thresholds skips non-monitored devices" do
+    device = devices(:door_sensor)
+    device.update_column(:alert_threshold_hours, 999.0)
+
+    DeviceMonitor.recalculate_all_thresholds
+    device.reload
+
+    assert_equal 999.0, device.alert_threshold_hours
+  end
+
   # -- reset_device --
 
   test "reset_device sets responsive and clears alert" do

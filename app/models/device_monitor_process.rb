@@ -18,11 +18,18 @@ class DeviceMonitorProcess
 
       @running = true
       last_summary_log = Time.current
+      last_threshold_recalc = Time.current
 
       while @running
         begin
           # Run the monitoring check
           result = DeviceMonitor.check_all_devices
+
+          # Recalculate alert thresholds once per day
+          if Time.current - last_threshold_recalc > 86_400
+            DeviceMonitor.recalculate_all_thresholds
+            last_threshold_recalc = Time.current
+          end
 
           # Log summary stats periodically (every hour)
           if Time.current - last_summary_log > 3600

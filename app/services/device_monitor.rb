@@ -98,6 +98,21 @@ class DeviceMonitor
         response_rate: monitored > 0 ? ((responsive.to_f / monitored) * 100).round(2) : 0
       }
     end
+    def recalculate_all_thresholds
+      updated_count = 0
+
+      Device.monitored.find_each do |device|
+        new_threshold = device.calculate_initial_threshold
+        if device.alert_threshold_hours != new_threshold
+          device.update_column(:alert_threshold_hours, new_threshold)
+          updated_count += 1
+        end
+      end
+
+      Rails.logger.info "[DeviceMonitor] Recalculated thresholds: #{updated_count} devices updated"
+      updated_count
+    end
+
     def reset_device(device)
       # Utility method to reset a device's monitoring state
       device.update(
