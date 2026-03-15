@@ -3,6 +3,7 @@
 # Table name: mqtt_messages
 #
 #  id             :integer          not null, primary key
+#  category       :string           default("device"), not null
 #  content        :text
 #  formatted_json :text
 #  friendly_name  :string
@@ -14,18 +15,37 @@
 #
 # Indexes
 #
+#  index_mqtt_messages_on_category       (category)
 #  index_mqtt_messages_on_device_id      (device_id)
 #  index_mqtt_messages_on_friendly_name  (friendly_name)
 #  index_mqtt_messages_on_topic          (topic)
 #
 class MqttMessage < ApplicationRecord
-  belongs_to :device
+  belongs_to :device, optional: true
   has_many :readings, dependent: :destroy
 
   scope :search, ->(query) {
     return all if query.blank?
     where("topic LIKE :q OR friendly_name LIKE :q OR content LIKE :q", q: "%#{query}%")
   }
+
+  scope :device_messages, -> { where(category: "device") }
+  scope :non_device_messages, -> { where.not(category: "device") }
+
+  CATEGORY_BRIDGE = "bridge"
+  CATEGORY_AVAILABILITY = "availability"
+  CATEGORY_SYSTEM = "system"
+  CATEGORY_DEVICE = "device"
+
+  def self.categorize_topic(topic)
+    parts = topic.split("/")
+    source = parts[1] # e.g. "bridge", "device_name"
+
+    return CATEGORY_BRIDGE if source == "bridge"
+    return CATEGORY_AVAILABILITY if parts.last == "availability"
+
+    CATEGORY_SYSTEM
+  end
 
   #  To test run with `rails runner MqttMessage.listen`
   def self.listen
@@ -66,10 +86,35 @@ class MqttMessage < ApplicationRecord
       end
 
       Rails.logger.info("#{topic}, #{message}")
-      parsed_json = JSON.parse(message)
 
-      #  Get device information
-      device_info = parsed_json["device"]
+      parsed_json = begin
+        JSON.parse(message)
+      rescue JSON::ParserError => e
+        Rails.logger.warn("Failed to parse JSON: #{e.message}")
+        nil
+      end
+
+      #  Get device information
+      device_info = parsed_json&.dig("device")
+
+      unless device_info
+        # Store non-device message
+        topic_parts = topic.split("/")
+        source_name = topic_parts[1] || topic
+        category = categorize_topic(topic)
+
+        formatted = parsed_json ? JSON.pretty_generate(parsed_json) : message
+
+        MqttMessage.create(
+          topic: topic,
+          content: message,
+          friendly_name: source_name,
+          formatted_json: formatted,
+          category: category
+        )
+        next
+      end
+
       friendlyName = device_info["friendlyName"]
       model = device_info["model"]
       ieeeAddr = device_info["ieeeAddr"]
@@ -103,6 +148,7 @@ class MqttMessage < ApplicationRecord
         model: model,
         formatted_json: formatted_json,
         device_id: device.id,
+        category: CATEGORY_DEVICE
       )
 
       # This is a collection of attributes that are interesting to us
@@ -123,7 +169,7 @@ class MqttMessage < ApplicationRecord
     end
   end
 
-  #  To test run with `rails runner MqttMessage.prune_old`
+  #  To test run with `rails runner MqttMessage.prune_old`
   def self.prune_old
     # Continuously prune old messages every minute
     while true

@@ -8,6 +8,12 @@ class MqttMessageTest < ActiveSupport::TestCase
     assert_equal devices(:motion_sensor), message.device
   end
 
+  test "device is optional" do
+    message = mqtt_messages(:bridge_state)
+    assert_nil message.device
+    assert message.valid?
+  end
+
   test "has many readings" do
     message = mqtt_messages(:motion_event)
     assert_respond_to message, :readings
@@ -35,6 +41,35 @@ class MqttMessageTest < ActiveSupport::TestCase
   test "search returns all when blank" do
     assert_equal MqttMessage.count, MqttMessage.search("").count
     assert_equal MqttMessage.count, MqttMessage.search(nil).count
+  end
+
+  test "device_messages scope returns only device category" do
+    results = MqttMessage.device_messages
+    assert results.all? { |m| m.category == "device" }
+    assert_includes results, mqtt_messages(:motion_event)
+    assert_not_includes results, mqtt_messages(:bridge_state)
+  end
+
+  test "non_device_messages scope excludes device category" do
+    results = MqttMessage.non_device_messages
+    assert results.none? { |m| m.category == "device" }
+    assert_includes results, mqtt_messages(:bridge_state)
+    assert_includes results, mqtt_messages(:availability_update)
+  end
+
+  # -- categorize_topic --
+
+  test "categorize_topic returns bridge for bridge topics" do
+    assert_equal "bridge", MqttMessage.categorize_topic("zigbee2mqtt/bridge/state")
+    assert_equal "bridge", MqttMessage.categorize_topic("zigbee2mqtt/bridge/logging")
+  end
+
+  test "categorize_topic returns availability for availability topics" do
+    assert_equal "availability", MqttMessage.categorize_topic("zigbee2mqtt/Living Room Motion/availability")
+  end
+
+  test "categorize_topic returns system for other topics" do
+    assert_equal "system", MqttMessage.categorize_topic("zigbee2mqtt/unknown_thing")
   end
 
   # -- formatted_json_pre --

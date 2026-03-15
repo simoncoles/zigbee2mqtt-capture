@@ -10,25 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_15_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_15_215231) do
   create_table "devices", force: :cascade do |t|
+    t.decimal "alert_threshold_hours", precision: 10, scale: 2
+    t.integer "capture_max"
+    t.datetime "created_at", null: false
+    t.string "device_type"
     t.string "friendly_name"
     t.string "ieee_addr"
+    t.boolean "is_responsive", default: true
+    t.datetime "last_alert_at"
+    t.datetime "last_checked_at"
+    t.datetime "last_heard_from"
     t.string "manufacturer_name"
     t.string "model"
+    t.boolean "monitoring_enabled", default: true
     t.integer "network_address"
     t.string "power_source"
-    t.string "device_type"
-    t.integer "zcl_version"
-    t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "capture_max"
-    t.datetime "last_heard_from"
-    t.decimal "alert_threshold_hours", precision: 10, scale: 2
-    t.boolean "monitoring_enabled", default: true
-    t.datetime "last_alert_at"
-    t.boolean "is_responsive", default: true
-    t.datetime "last_checked_at"
+    t.integer "zcl_version"
     t.index ["friendly_name"], name: "index_devices_on_friendly_name"
     t.index ["ieee_addr"], name: "index_devices_on_ieee_addr", unique: true
     t.index ["is_responsive"], name: "index_devices_on_is_responsive"
@@ -38,14 +38,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_15_000000) do
   end
 
   create_table "mqtt_messages", force: :cascade do |t|
-    t.string "topic"
+    t.string "category", default: "device", null: false
     t.text "content"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "friendly_name"
-    t.text "formatted_json"
-    t.string "model"
     t.bigint "device_id"
+    t.text "formatted_json"
+    t.string "friendly_name"
+    t.string "model"
+    t.string "topic"
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_mqtt_messages_on_category"
     t.index ["created_at"], name: "index_mqtt_messages_on_created_at"
     t.index ["device_id", "created_at"], name: "index_mqtt_messages_on_device_id_and_created_at", order: { created_at: :desc }
     t.index ["device_id"], name: "index_mqtt_messages_on_device_id"
@@ -54,12 +56,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_15_000000) do
   end
 
   create_table "readings", force: :cascade do |t|
-    t.string "key"
-    t.string "value"
-    t.integer "mqtt_message_id", null: false
-    t.integer "device_id", null: false
     t.datetime "created_at", null: false
+    t.integer "device_id", null: false
+    t.string "key"
+    t.integer "mqtt_message_id", null: false
     t.datetime "updated_at", null: false
+    t.string "value"
     t.index ["created_at"], name: "index_readings_on_created_at"
     t.index ["device_id", "created_at"], name: "index_readings_on_device_id_and_created_at", order: { created_at: :desc }
     t.index ["device_id", "key", "created_at"], name: "index_readings_on_device_key_created", order: { created_at: :desc }

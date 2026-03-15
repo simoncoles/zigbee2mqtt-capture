@@ -3,6 +3,7 @@ motion_event:
   content: '{"occupancy":true,"battery":95,"voltage":3025,"linkquality":120}'
   friendly_name: "Living Room Motion"
   model: "RTCGQ11LM"
+  category: "device"
   formatted_json: |
     {
       "occupancy": true,
@@ -90,3 +91,25 @@ light_status_6:
   model: "LED1545G12"
   device: light_bulb
   created_at: <%= 5.hours.ago.to_fs(:db) %>
+
+bridge_state:
+  topic: "zigbee2mqtt/bridge/state"
+  content: '{"state":"online"}'
+  friendly_name: "bridge"
+  category: "bridge"
+  formatted_json: |
+    {
+      "state": "online"
+    }
+  created_at: <%= 20.minutes.ago.to_fs(:db) %>
+
+availability_update:
+  topic: "zigbee2mqtt/Living Room Motion/availability"
+  content: '{"state":"online"}'
+  friendly_name: "Living Room Motion"
+  category: "availability"
+  formatted_json: |
+    {
+      "state": "online"
+    }
+  created_at: <%= 15.minutes.ago.to_fs(:db) %>

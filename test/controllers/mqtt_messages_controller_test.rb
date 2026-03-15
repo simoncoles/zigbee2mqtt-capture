@@ -10,4 +10,14 @@ class MqttMessagesControllerTest < ActionDispatch::IntegrationTest
     get mqtt_messages_path, params: { q: "zigbee2mqtt" }
     assert_response :success
   end
+
+  test "GET /mqtt_messages/system returns 200" do
+    get system_mqtt_messages_path
+    assert_response :success
+  end
+
+  test "GET /mqtt_messages/system with search param works" do
+    get system_mqtt_messages_path, params: { q: "bridge" }
+    assert_response :success
+  end
 end
