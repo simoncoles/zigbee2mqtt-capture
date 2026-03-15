@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.0"
+gem "rails", "~> 8.1.0"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -64,7 +64,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 
-  # Pin minitest to 5.x for Rails 8.0 compatibility
   gem "minitest", "~> 5.25"
 end
 
@@ -88,8 +87,6 @@ gem "appsignal"
 
 # Deployment
 gem "kamal"
-
-gem "prism", "~> 1.4"
 
 # Tailwind CSS for styling
 gem "tailwindcss-rails"
