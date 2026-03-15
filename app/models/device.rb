@@ -97,22 +97,15 @@ class Device < ApplicationRecord
     time_since_last_message - alert_threshold_hours
   end
 
-  # Prune messages inexcess of capture_max
+  # Prune messages in excess of capture_max
   def prune
-    # If capture_max is set for this device, prune messages in excess of capture_max
-    unless capture_max.nil?
-      # Find the IDs of the messages to keep
-      kept_messages = mqtt_messages.order(created_at: :desc).limit(capture_max).pluck(:id)
+    return if capture_max.nil?
 
-      # Delete messages not included in kept_messages
-      mqtt_messages.each do |message|
-        unless kept_messages.include?(message.id)
-          # Remove associated readings first
-          message.readings.destroy_all
-          # And then remove the message itself
-          message.destroy
-        end
-      end
-    end
+    kept_message_ids = mqtt_messages.order(created_at: :desc).limit(capture_max).pluck(:id)
+    messages_to_delete = mqtt_messages.where.not(id: kept_message_ids)
+
+    # Delete associated readings first, then messages
+    Reading.where(mqtt_message_id: messages_to_delete.select(:id)).delete_all
+    messages_to_delete.delete_all
   end
 end

@@ -110,20 +110,13 @@ class MqttMessage < ApplicationRecord
                                 "occupancy", "contact", "battery", "linkquality", "vibration",
                                 "x_axis", "y_axis", "z_axis", "angle", "angle_x", "angle_y", "angle_z",
                                 "angle_x_absolute", "angle_y_absolute", "angle_z_absolute" ]
-      # Create readings
-      interesting_attributes.each do |attribute|
-        if parsed_json.key?(attribute) && parsed_json[attribute].present?
-          value = parsed_json[attribute]
-          if value.present?
-            Reading.create(
-              key: attribute,
-              value: value,
-              mqtt_message: mqtt_message,
-              device: device
-            )
-          end
-        end
-      end
+      # Create readings in bulk
+      now = Time.current
+      reading_records = interesting_attributes.filter_map { |attr|
+        next unless parsed_json.key?(attr) && parsed_json[attr].present?
+        { key: attr, value: parsed_json[attr].to_s, mqtt_message_id: mqtt_message.id, device_id: device.id, created_at: now, updated_at: now }
+      }
+      Reading.insert_all(reading_records) if reading_records.any?
 
       # Prune old messages for this device
       device.prune
@@ -135,7 +128,9 @@ class MqttMessage < ApplicationRecord
     # Continuously prune old messages every minute
     while true
       prune_hours = ENV.fetch("PRUNE_HOURS", 48).to_i
-      MqttMessage.where("created_at < ?", prune_hours.hours.ago).delete_all
+      old_messages = MqttMessage.where("created_at < ?", prune_hours.hours.ago)
+      Reading.where(mqtt_message_id: old_messages.select(:id)).delete_all
+      old_messages.delete_all
       # Do it again in an hour
       sleep 3600
     end

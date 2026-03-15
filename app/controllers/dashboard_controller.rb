@@ -1,11 +1,12 @@
 class DashboardController < ApplicationController
   def show
-    # Get device statistics
-    total_devices = Device.count
-    monitored_devices = Device.where(monitoring_enabled: true).count
-    responsive_devices = Device.where(monitoring_enabled: true, is_responsive: true).count
-    non_responsive_devices = Device.where(monitoring_enabled: true, is_responsive: false).count
-    monitoring_disabled = Device.where(monitoring_enabled: false).count
+    # Get device statistics with a single grouped query
+    counts = Device.group(:monitoring_enabled, :is_responsive).count
+    total_devices = counts.values.sum
+    monitored_devices = counts.select { |(enabled, _), _| enabled }.values.sum
+    responsive_devices = counts[[ true, true ]] || 0
+    non_responsive_devices = counts[[ true, false ]] || 0
+    monitoring_disabled = counts.select { |(enabled, _), _| !enabled }.values.sum
 
     response_rate = if monitored_devices > 0
       ((responsive_devices.to_f / monitored_devices) * 100).round
@@ -28,8 +29,8 @@ class DashboardController < ApplicationController
                                     .limit(10)
 
     # Get recent data for charts/activity
-    @recent_messages = MqttMessage.order(created_at: :desc).limit(10)
-    @recent_readings = Reading.order(created_at: :desc).limit(10)
+    @recent_messages = MqttMessage.includes(:device).order(created_at: :desc).limit(10)
+    @recent_readings = Reading.includes(:device).order(created_at: :desc).limit(10)
 
     # Count messages by hour for the last 24 hours
     @messages_by_hour = MqttMessage.where(created_at: 24.hours.ago..Time.current)

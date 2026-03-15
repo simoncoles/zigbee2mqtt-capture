@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_26_193000) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_15_000000) do
   create_table "devices", force: :cascade do |t|
     t.string "friendly_name"
     t.string "ieee_addr"
@@ -29,9 +29,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_26_193000) do
     t.datetime "last_alert_at"
     t.boolean "is_responsive", default: true
     t.datetime "last_checked_at"
+    t.index ["friendly_name"], name: "index_devices_on_friendly_name"
     t.index ["ieee_addr"], name: "index_devices_on_ieee_addr", unique: true
     t.index ["is_responsive"], name: "index_devices_on_is_responsive"
     t.index ["monitoring_enabled", "is_responsive", "last_alert_at"], name: "index_devices_on_monitoring_and_responsive_and_last_alert_at", order: { last_alert_at: :desc }
+    t.index ["monitoring_enabled", "is_responsive", "last_heard_from"], name: "index_devices_on_monitoring_responsive_last_heard"
     t.index ["monitoring_enabled"], name: "index_devices_on_monitoring_enabled"
   end
 
@@ -44,6 +46,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_26_193000) do
     t.text "formatted_json"
     t.string "model"
     t.bigint "device_id"
+    t.index ["created_at"], name: "index_mqtt_messages_on_created_at"
     t.index ["device_id", "created_at"], name: "index_mqtt_messages_on_device_id_and_created_at", order: { created_at: :desc }
     t.index ["device_id"], name: "index_mqtt_messages_on_device_id"
     t.index ["friendly_name"], name: "index_mqtt_messages_on_friendly_name"
@@ -57,8 +60,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_26_193000) do
     t.integer "device_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_readings_on_created_at"
     t.index ["device_id", "created_at"], name: "index_readings_on_device_id_and_created_at", order: { created_at: :desc }
+    t.index ["device_id", "key", "created_at"], name: "index_readings_on_device_key_created", order: { created_at: :desc }
     t.index ["device_id"], name: "index_readings_on_device_id"
+    t.index ["key"], name: "index_readings_on_key"
     t.index ["mqtt_message_id"], name: "index_readings_on_mqtt_message_id"
   end
 
