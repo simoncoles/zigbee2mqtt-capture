@@ -86,9 +86,6 @@ gem "appsignal"
 # Deployment
 gem "kamal"
 
-# Quick and easy admin interface
-gem "madmin", "~> 2.0"
-
 gem "prism", "~> 1.4"
 
 # Tailwind CSS for styling

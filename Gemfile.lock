@@ -159,13 +159,6 @@ GEM
     loofah (2.25.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    madmin (2.3.2)
-      importmap-rails
-      pagy (>= 3.5)
-      propshaft
-      rails (>= 7.0.0)
-      stimulus-rails
-      turbo-rails
     mail (2.9.0)
       logger
       mini_mime (>= 0.1.1)
@@ -215,10 +208,6 @@ GEM
     nokogiri (1.19.1-x86_64-linux-gnu)
       racc (~> 1.4)
     ostruct (0.6.3)
-    pagy (43.3.3)
-      json
-      uri
-      yaml
     parallel (1.27.0)
     parser (3.3.10.2)
       ast (~> 2.4.1)
@@ -383,7 +372,6 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yaml (0.4.0)
     zeitwerk (2.7.5)
 
 PLATFORMS
@@ -407,7 +395,6 @@ DEPENDENCIES
   jbuilder
   kamal
   lograge
-  madmin (~> 2.0)
   mqtt
   mysql2 (~> 0.5)
   pg (~> 1.5)

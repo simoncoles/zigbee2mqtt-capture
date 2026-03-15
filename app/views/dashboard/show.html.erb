@@ -4,7 +4,7 @@
     <h1 class="text-4xl font-bold text-gray-900 mb-2">Device Monitoring Dashboard</h1>
     <p class="text-gray-600">Real-time status of your Zigbee devices</p>
   </div>
-  
+
   <!-- Monitoring Stats Cards -->
   <div class="mb-8">
     <h2 class="text-2xl font-semibold text-gray-900 mb-4">Device Monitoring</h2>
@@ -15,35 +15,35 @@
           <p class="text-3xl font-bold text-gray-900"><%= @stats[:total_devices] %></p>
         </div>
       </div>
-      
+
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div class="text-center">
           <p class="text-sm font-medium text-gray-600 mb-2">Monitored</p>
           <p class="text-3xl font-bold text-blue-600"><%= @stats[:monitored_devices] %></p>
         </div>
       </div>
-      
+
       <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow-sm border border-green-200 p-4">
         <div class="text-center">
           <p class="text-sm font-medium text-green-700 mb-2">Responsive</p>
           <p class="text-3xl font-bold text-green-800"><%= @stats[:responsive_devices] %></p>
         </div>
       </div>
-      
+
       <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg shadow-sm border border-amber-200 p-4">
         <div class="text-center">
           <p class="text-sm font-medium text-amber-700 mb-2">Non-Responsive</p>
           <p class="text-3xl font-bold text-amber-800"><%= @stats[:non_responsive_devices] %></p>
         </div>
       </div>
-      
+
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div class="text-center">
           <p class="text-sm font-medium text-gray-600 mb-2">Disabled</p>
           <p class="text-3xl font-bold text-gray-500"><%= @stats[:monitoring_disabled] %></p>
         </div>
       </div>
-      
+
       <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-sm border border-blue-200 p-4">
         <div class="text-center">
           <p class="text-sm font-medium text-blue-700 mb-2">Response Rate</p>
@@ -52,7 +52,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Non-Responsive Devices Table (match Monitoring) -->
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-8">
     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
@@ -145,12 +145,6 @@
                           title: "Disable monitoring" do %>
                         Disable
                       <% end %>
-
-                      <%= link_to madmin_device_path(device),
-                          class: "inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-150",
-                          target: "_blank" do %>
-                        Admin
-                      <% end %>
                     </div>
                   </td>
                 </tr>
@@ -177,7 +171,7 @@
       <% end %>
     </div>
   </div>
-  
+
   <!-- Quick Actions and Data Tables -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Quick Actions -->
@@ -187,7 +181,7 @@
       </div>
       <div class="p-6">
         <div class="space-y-3">
-          <%= link_to monitoring_index_path, 
+          <%= link_to monitoring_index_path,
               class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
             <div class="flex items-center">
               <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">📊</span>
@@ -195,44 +189,15 @@
             </div>
             <span class="text-gray-400">→</span>
           <% end %>
-          
-          <%= link_to madmin_devices_path, 
-              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
-            <div class="flex items-center">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">📱</span>
-              <span class="text-sm font-medium text-gray-900">Manage Devices</span>
-            </div>
-            <span class="text-gray-400">→</span>
-          <% end %>
-          
-          <%= link_to madmin_mqtt_messages_path, 
-              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
-            <div class="flex items-center">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">💬</span>
-              <span class="text-sm font-medium text-gray-900">MQTT Messages</span>
-            </div>
-            <span class="text-gray-400">→</span>
-          <% end %>
-          
-          <%= link_to madmin_readings_path, 
-              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
-            <div class="flex items-center">
-              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">📈</span>
-              <span class="text-sm font-medium text-gray-900">Sensor Readings</span>
-            </div>
-            <span class="text-gray-400">→</span>
-          <% end %>
         </div>
       </div>
     </div>
-    
+
     <!-- Recent MQTT Messages -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
         <div class="flex items-center justify-between">
           <h2 class="text-lg font-semibold text-gray-900">Recent MQTT Messages</h2>
-          <%= link_to "View all", madmin_mqtt_messages_path, 
-              class: "text-sm text-blue-600 hover:text-blue-800" %>
         </div>
       </div>
       <div class="p-6">
@@ -260,14 +225,12 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Recent Sensor Readings -->
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-8">
     <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-semibold text-gray-900">Recent Sensor Readings</h2>
-        <%= link_to "View all", madmin_readings_path, 
-            class: "text-sm text-blue-600 hover:text-blue-800" %>
       </div>
     </div>
     <div class="p-6">
@@ -287,8 +250,8 @@
                 <tr class="hover:bg-gray-50 transition-colors duration-150">
                   <td class="px-3 py-4 whitespace-nowrap text-sm">
                     <% if reading.device %>
-                      <%= link_to reading.device.friendly_name || reading.device.ieee_addr, 
-                          madmin_device_path(reading.device),
+                      <%= link_to reading.device.friendly_name || reading.device.ieee_addr,
+                          device_monitoring_path(reading.device),
                           class: "text-blue-600 hover:text-blue-800" %>
                     <% else %>
                       <span class="text-gray-400">Unknown</span>
@@ -315,7 +278,7 @@
       <% end %>
     </div>
   </div>
-  
+
   <!-- System Status -->
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
     <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
