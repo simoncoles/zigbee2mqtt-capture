@@ -1,43 +1,59 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+motion_sensor:
+  friendly_name: "Living Room Motion"
+  ieee_addr: "0x00158d0001a2b3c4"
+  manufacturer_name: "Xiaomi"
+  model: "RTCGQ11LM"
+  network_address: 12345
+  power_source: "Battery"
+  device_type: "EndDevice"
+  zcl_version: 3
+  monitoring_enabled: true
+  is_responsive: true
+  alert_threshold_hours: 4.0
+  last_heard_from: <%= 1.hour.ago.to_fs(:db) %>
+  last_checked_at: <%= 30.minutes.ago.to_fs(:db) %>
 
-# == Schema Information
-#
-# Table name: devices
-#
-#  id                :integer          not null, primary key
-#  capture_max       :integer
-#  device_type       :string
-#  friendly_name     :string
-#  ieee_addr         :string
-#  last_heard_from   :datetime
-#  manufacturer_name :string
-#  model             :string
-#  network_address   :integer
-#  power_source      :string
-#  zcl_version       :integer
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#
-# Indexes
-#
-#  index_devices_on_ieee_addr  (ieee_addr) UNIQUE
-#
-one:
-  friendly_name: MyString
-  ieee_addr: MyString
-  manufacturer_name: MyString
-  model: MyString
-  network_address: 1
-  power_source: MyString
-  type: 
-  zcl_version: 1
+temp_sensor:
+  friendly_name: "Kitchen Temperature"
+  ieee_addr: "0x00158d0001d4e5f6"
+  manufacturer_name: "Xiaomi"
+  model: "WSDCGQ11LM"
+  network_address: 23456
+  power_source: "Battery"
+  device_type: "EndDevice"
+  zcl_version: 3
+  monitoring_enabled: true
+  is_responsive: false
+  alert_threshold_hours: 2.0
+  last_heard_from: <%= 10.hours.ago.to_fs(:db) %>
+  last_alert_at: <%= 5.hours.ago.to_fs(:db) %>
+  last_checked_at: <%= 1.hour.ago.to_fs(:db) %>
 
-two:
-  friendly_name: MyString
-  ieee_addr: MyString
-  manufacturer_name: MyString
-  model: MyString
-  network_address: 1
-  power_source: MyString
-  type: 
-  zcl_version: 1
+door_sensor:
+  friendly_name: "Front Door"
+  ieee_addr: "0x00158d0001g7h8i9"
+  manufacturer_name: "Sonoff"
+  model: "SNZB-04"
+  network_address: 34567
+  power_source: "Battery"
+  device_type: "EndDevice"
+  zcl_version: 3
+  monitoring_enabled: false
+  is_responsive: true
+  last_heard_from: <%= 2.hours.ago.to_fs(:db) %>
+
+light_bulb:
+  friendly_name: "Office Light"
+  ieee_addr: "0x00158d0001j0k1l2"
+  manufacturer_name: "IKEA"
+  model: "LED1545G12"
+  network_address: 45678
+  power_source: "Mains"
+  device_type: "Router"
+  zcl_version: 3
+  monitoring_enabled: true
+  is_responsive: true
+  alert_threshold_hours: 24.0
+  capture_max: 5
+  last_heard_from: <%= 30.minutes.ago.to_fs(:db) %>
+  last_checked_at: <%= 15.minutes.ago.to_fs(:db) %>

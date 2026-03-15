@@ -1,35 +1,47 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+motion_occupancy:
+  key: "occupancy"
+  value: "true"
+  mqtt_message: motion_event
+  device: motion_sensor
 
-# == Schema Information
-#
-# Table name: readings
-#
-#  id              :integer          not null, primary key
-#  key             :string
-#  value           :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  device_id       :integer          not null
-#  mqtt_message_id :integer          not null
-#
-# Indexes
-#
-#  index_readings_on_device_id        (device_id)
-#  index_readings_on_mqtt_message_id  (mqtt_message_id)
-#
-# Foreign Keys
-#
-#  device_id        (device_id => devices.id)
-#  mqtt_message_id  (mqtt_message_id => mqtt_messages.id)
-#
-one:
-  key: MyString
-  value: MyString
-  mqtt_message: one
-  device: one
+motion_battery:
+  key: "battery"
+  value: "95"
+  mqtt_message: motion_event
+  device: motion_sensor
 
-two:
-  key: MyString
-  value: MyString
-  mqtt_message: two
-  device: two
+motion_linkquality:
+  key: "linkquality"
+  value: "120"
+  mqtt_message: motion_event
+  device: motion_sensor
+
+temp_temperature:
+  key: "temperature"
+  value: "22.5"
+  mqtt_message: temp_reading
+  device: temp_sensor
+
+temp_humidity:
+  key: "humidity"
+  value: "45"
+  mqtt_message: temp_reading
+  device: temp_sensor
+
+temp_pressure:
+  key: "pressure"
+  value: "1013"
+  mqtt_message: temp_reading
+  device: temp_sensor
+
+door_contact:
+  key: "contact"
+  value: "false"
+  mqtt_message: door_open
+  device: door_sensor
+
+door_battery:
+  key: "battery"
+  value: "70"
+  mqtt_message: door_open
+  device: door_sensor

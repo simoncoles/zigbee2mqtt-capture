@@ -1,29 +1,92 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+motion_event:
+  topic: "zigbee2mqtt/Living Room Motion"
+  content: '{"occupancy":true,"battery":95,"voltage":3025,"linkquality":120}'
+  friendly_name: "Living Room Motion"
+  model: "RTCGQ11LM"
+  formatted_json: |
+    {
+      "occupancy": true,
+      "battery": 95,
+      "voltage": 3025,
+      "linkquality": 120
+    }
+  device: motion_sensor
+  created_at: <%= 1.hour.ago.to_fs(:db) %>
 
-# == Schema Information
-#
-# Table name: mqtt_messages
-#
-#  id             :integer          not null, primary key
-#  content        :text
-#  formatted_json :text
-#  friendly_name  :string
-#  model          :string
-#  topic          :string
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  device_id      :bigint
-#
-# Indexes
-#
-#  index_mqtt_messages_on_device_id      (device_id)
-#  index_mqtt_messages_on_friendly_name  (friendly_name)
-#  index_mqtt_messages_on_topic          (topic)
-#
-one:
-  topic: MyString
-  content: MyText
+motion_event_old:
+  topic: "zigbee2mqtt/Living Room Motion"
+  content: '{"occupancy":false,"battery":95,"voltage":3020,"linkquality":115}'
+  friendly_name: "Living Room Motion"
+  model: "RTCGQ11LM"
+  device: motion_sensor
+  created_at: <%= 3.hours.ago.to_fs(:db) %>
 
-two:
-  topic: MyString
-  content: MyText
+temp_reading:
+  topic: "zigbee2mqtt/Kitchen Temperature"
+  content: '{"temperature":22.5,"humidity":45,"pressure":1013,"battery":80,"linkquality":100}'
+  friendly_name: "Kitchen Temperature"
+  model: "WSDCGQ11LM"
+  formatted_json: |
+    {
+      "temperature": 22.5,
+      "humidity": 45,
+      "pressure": 1013
+    }
+  device: temp_sensor
+  created_at: <%= 10.hours.ago.to_fs(:db) %>
+
+door_open:
+  topic: "zigbee2mqtt/Front Door"
+  content: '{"contact":false,"battery":70,"linkquality":90}'
+  friendly_name: "Front Door"
+  model: "SNZB-04"
+  device: door_sensor
+  created_at: <%= 2.hours.ago.to_fs(:db) %>
+
+light_status_1:
+  topic: "zigbee2mqtt/Office Light"
+  content: '{"state":"ON","brightness":254,"linkquality":150}'
+  friendly_name: "Office Light"
+  model: "LED1545G12"
+  device: light_bulb
+  created_at: <%= 30.minutes.ago.to_fs(:db) %>
+
+light_status_2:
+  topic: "zigbee2mqtt/Office Light"
+  content: '{"state":"OFF","brightness":0,"linkquality":148}'
+  friendly_name: "Office Light"
+  model: "LED1545G12"
+  device: light_bulb
+  created_at: <%= 1.hour.ago.to_fs(:db) %>
+
+light_status_3:
+  topic: "zigbee2mqtt/Office Light"
+  content: '{"state":"ON","brightness":200,"linkquality":145}'
+  friendly_name: "Office Light"
+  model: "LED1545G12"
+  device: light_bulb
+  created_at: <%= 2.hours.ago.to_fs(:db) %>
+
+light_status_4:
+  topic: "zigbee2mqtt/Office Light"
+  content: '{"state":"ON","brightness":254,"linkquality":140}'
+  friendly_name: "Office Light"
+  model: "LED1545G12"
+  device: light_bulb
+  created_at: <%= 3.hours.ago.to_fs(:db) %>
+
+light_status_5:
+  topic: "zigbee2mqtt/Office Light"
+  content: '{"state":"OFF","brightness":0,"linkquality":135}'
+  friendly_name: "Office Light"
+  model: "LED1545G12"
+  device: light_bulb
+  created_at: <%= 4.hours.ago.to_fs(:db) %>
+
+light_status_6:
+  topic: "zigbee2mqtt/Office Light"
+  content: '{"state":"ON","brightness":100,"linkquality":130}'
+  friendly_name: "Office Light"
+  model: "LED1545G12"
+  device: light_bulb
+  created_at: <%= 5.hours.ago.to_fs(:db) %>
