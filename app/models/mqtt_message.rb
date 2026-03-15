@@ -128,9 +128,11 @@ class MqttMessage < ApplicationRecord
     # Continuously prune old messages every minute
     while true
       prune_hours = ENV.fetch("PRUNE_HOURS", 48).to_i
-      old_messages = MqttMessage.where("created_at < ?", prune_hours.hours.ago)
-      Reading.where(mqtt_message_id: old_messages.select(:id)).delete_all
-      old_messages.delete_all
+      MqttMessage.transaction do
+        old_messages = MqttMessage.where("created_at < ?", prune_hours.hours.ago)
+        Reading.where(mqtt_message_id: old_messages.select(:id)).delete_all
+        old_messages.delete_all
+      end
       # Do it again in an hour
       sleep 3600
     end
