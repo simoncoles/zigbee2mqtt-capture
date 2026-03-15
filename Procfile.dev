@@ -1,2 +1,4 @@
 web: bin/rails server
 css: bin/rails tailwindcss:watch
+mqtt: ./bin/rails runner "MqttMessage.listen"
+monitor: ./bin/rails runner "DeviceMonitorProcess.run"
