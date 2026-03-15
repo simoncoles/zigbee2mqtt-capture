@@ -23,4 +23,11 @@
 class Reading < ApplicationRecord
   belongs_to :mqtt_message
   belongs_to :device
+
+  scope :search, ->(query) {
+    return all if query.blank?
+    left_joins(:device).where(
+      "readings.key LIKE :q OR readings.value LIKE :q OR devices.friendly_name LIKE :q", q: "%#{query}%"
+    )
+  }
 end

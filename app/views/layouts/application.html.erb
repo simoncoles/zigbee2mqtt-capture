@@ -19,6 +19,23 @@
   </head>
 
   <body>
+    <nav class="bg-gray-800">
+      <div class="container mx-auto px-5">
+        <div class="flex items-center justify-between h-14">
+          <div class="flex items-center space-x-1">
+            <%= link_to "Zigbee2MQTT", root_path, class: "text-white font-semibold text-lg px-3 py-2" %>
+            <div class="flex space-x-1">
+              <%= link_to "Dashboard", root_path, class: "#{request.path == root_path ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Devices", devices_path, class: "#{request.path.start_with?('/devices') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Readings", readings_path, class: "#{request.path.start_with?('/readings') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Messages", mqtt_messages_path, class: "#{request.path.start_with?('/mqtt_messages') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Monitoring", monitoring_index_path, class: "#{request.path.start_with?('/monitoring') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
     <main class="container mx-auto mt-8 px-5">
       <%= yield %>
     </main>

@@ -22,6 +22,11 @@ class MqttMessage < ApplicationRecord
   belongs_to :device
   has_many :readings, dependent: :destroy
 
+  scope :search, ->(query) {
+    return all if query.blank?
+    where("topic LIKE :q OR friendly_name LIKE :q OR content LIKE :q", q: "%#{query}%")
+  }
+
   #  To test run with `rails runner MqttMessage.listen`
   def self.listen
     Rails.logger.info("Connecting to MQTT broker at: #{ENV['MQTT_URL']}")

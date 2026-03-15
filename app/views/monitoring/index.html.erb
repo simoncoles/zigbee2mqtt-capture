@@ -101,8 +101,10 @@
                   </td>
                   <td class="px-3 py-4">
                     <div>
-                      <div class="text-sm font-medium text-gray-900">
-                        <%= device.friendly_name || device.ieee_addr %>
+                      <div class="text-sm font-medium">
+                        <%= link_to device.friendly_name || device.ieee_addr,
+                            device_monitoring_path(device),
+                            class: "text-blue-600 hover:text-blue-800" %>
                       </div>
                       <div class="text-sm text-gray-500">
                         <%= device.model %>

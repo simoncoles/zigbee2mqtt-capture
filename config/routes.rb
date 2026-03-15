@@ -16,6 +16,11 @@ Rails.application.routes.draw do
   post "/monitoring/device/:id/reset", to: "monitoring#reset_device", as: :reset_monitoring
   post "/monitoring/device/:id/recalculate", to: "monitoring#recalculate_threshold", as: :recalculate_threshold_monitoring
 
+  # List screens
+  resources :mqtt_messages, only: [:index]
+  resources :devices, only: [:index]
+  resources :readings, only: [:index]
+
   # Defines the root path route ("/")
   root to: "dashboard#show"
 end

@@ -89,7 +89,11 @@
                   </td>
                   <td class="px-3 py-4">
                     <div>
-                      <div class="text-sm font-medium text-gray-900"><%= device.friendly_name || device.ieee_addr %></div>
+                      <div class="text-sm font-medium">
+                        <%= link_to device.friendly_name || device.ieee_addr,
+                            device_monitoring_path(device),
+                            class: "text-blue-600 hover:text-blue-800" %>
+                      </div>
                       <div class="text-sm text-gray-500"><%= device.model %></div>
                     </div>
                   </td>
@@ -189,6 +193,33 @@
             </div>
             <span class="text-gray-400">→</span>
           <% end %>
+
+          <%= link_to devices_path,
+              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">📡</span>
+              <span class="text-sm font-medium text-gray-900">All Devices</span>
+            </div>
+            <span class="text-gray-400">→</span>
+          <% end %>
+
+          <%= link_to mqtt_messages_path,
+              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">📨</span>
+              <span class="text-sm font-medium text-gray-900">All MQTT Messages</span>
+            </div>
+            <span class="text-gray-400">→</span>
+          <% end %>
+
+          <%= link_to readings_path,
+              class: "flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150" do %>
+            <div class="flex items-center">
+              <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-gray-200 text-gray-600 text-xs font-bold mr-3">🌡️</span>
+              <span class="text-sm font-medium text-gray-900">All Sensor Readings</span>
+            </div>
+            <span class="text-gray-400">→</span>
+          <% end %>
         </div>
       </div>
     </div>
@@ -210,7 +241,13 @@
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="text-gray-900 font-medium truncate">
-                    <%= message.topic %>
+                    <% if message.device %>
+                      <%= link_to message.friendly_name || message.topic,
+                          device_monitoring_path(message.device),
+                          class: "text-blue-600 hover:text-blue-800" %>
+                    <% else %>
+                      <%= message.topic %>
+                    <% end %>
                   </p>
                   <p class="text-gray-500 text-xs">
                     <%= time_ago_in_words(message.created_at) %> ago

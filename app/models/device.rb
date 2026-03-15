@@ -24,6 +24,11 @@ class Device < ApplicationRecord
   has_many :mqtt_messages, dependent: :destroy
   has_many :readings, dependent: :destroy
 
+  scope :search, ->(query) {
+    return all if query.blank?
+    where("friendly_name LIKE :q OR model LIKE :q OR manufacturer_name LIKE :q OR ieee_addr LIKE :q", q: "%#{query}%")
+  }
+
   # Monitoring scopes
   scope :monitored, -> { where(monitoring_enabled: true) }
   scope :non_responsive, -> { where(is_responsive: false, monitoring_enabled: true) }

@@ -90,3 +90,6 @@ gem "prism", "~> 1.4"
 
 # Tailwind CSS for styling
 gem "tailwindcss-rails"
+
+# Pagination
+gem "pagy"

@@ -1,0 +1,64 @@
+<div class="w-full max-w-7xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">MQTT Messages</h1>
+    <p class="text-gray-600">Browse all captured MQTT messages from your Zigbee network</p>
+  </div>
+
+  <%= render "shared/search_bar", url: mqtt_messages_path, placeholder: "Search by topic, device name, or content..." %>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-900">Messages</h2>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+          <%= @pagy.count %> total
+        </span>
+      </div>
+    </div>
+
+    <div class="p-6">
+      <% if @mqtt_messages.any? %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Topic</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Name</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Received</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @mqtt_messages.each do |message| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-3 py-4 text-sm text-gray-900 font-medium"><%= message.topic %></td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm">
+                    <% if message.device %>
+                      <%= link_to message.friendly_name || message.device.ieee_addr,
+                          device_monitoring_path(message.device),
+                          class: "text-blue-600 hover:text-blue-800 font-medium" %>
+                    <% else %>
+                      <span class="text-gray-900"><%= message.friendly_name %></span>
+                    <% end %>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= message.model %></td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= time_ago_in_words(message.created_at) %> ago</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">No messages found<%= " matching '#{params[:q]}'" if params[:q].present? %>.</p>
+      <% end %>
+    </div>
+
+    <%= render "shared/pagination", pagy: @pagy %>
+  </div>
+
+  <div class="mt-6">
+    <%= link_to root_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+      <span class="mr-1">&larr;</span> Back to Dashboard
+    <% end %>
+  </div>
+</div>
