@@ -199,7 +199,7 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <% @recent_messages.each do |message| %>
-                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                <tr class="hover:bg-gray-50 transition-colors duration-150 cursor-pointer" onclick="window.location='<%= mqtt_message_path(message) %>'">
                   <td class="px-3 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-900"><%= message.created_at.strftime("%Y-%m-%d %H:%M:%S") %></div>
                     <div class="text-xs text-gray-500"><%= time_ago_in_words(message.created_at) %> ago</div>
@@ -210,7 +210,8 @@
                   <td class="px-3 py-4">
                     <code class="bg-gray-100 px-2 py-1 rounded text-xs"><%= truncate(message.content, length: 100) %></code>
                   </td>
-                  <td class="px-3 py-4 whitespace-nowrap">
+                  <td class="px-3 py-4 whitespace-nowrap text-sm">
+                    <%= link_to "View", mqtt_message_path(message), class: "text-blue-600 hover:text-blue-800 font-medium" %>
                   </td>
                 </tr>
               <% end %>

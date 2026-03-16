@@ -1,0 +1,91 @@
+<div class="w-full max-w-7xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Message Details</h1>
+    <p class="text-gray-600">Full details for MQTT message #<%= @mqtt_message.id %></p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900">Message Information</h2>
+    </div>
+    <div class="p-6">
+      <dl class="space-y-4">
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">Topic</dt>
+          <dd class="text-sm text-gray-900"><code class="bg-gray-100 px-2 py-1 rounded"><%= @mqtt_message.topic %></code></dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">Category</dt>
+          <dd class="text-sm">
+            <% badge_class = case @mqtt_message.category
+              when "device" then "bg-blue-100 text-blue-800"
+              when "bridge" then "bg-purple-100 text-purple-800"
+              when "availability" then "bg-green-100 text-green-800"
+              else "bg-gray-100 text-gray-800"
+            end %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
+              <%= @mqtt_message.category %>
+            </span>
+          </dd>
+        </div>
+        <% if @mqtt_message.friendly_name.present? %>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Friendly Name</dt>
+            <dd class="text-sm text-gray-900"><%= @mqtt_message.friendly_name %></dd>
+          </div>
+        <% end %>
+        <% if @mqtt_message.model.present? %>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Model</dt>
+            <dd class="text-sm text-gray-900"><%= @mqtt_message.model %></dd>
+          </div>
+        <% end %>
+        <% if @mqtt_message.device %>
+          <div class="flex justify-between">
+            <dt class="text-sm font-medium text-gray-500">Device</dt>
+            <dd class="text-sm">
+              <%= link_to @mqtt_message.device.friendly_name || @mqtt_message.device.ieee_addr,
+                  device_monitoring_path(@mqtt_message.device),
+                  class: "text-blue-600 hover:text-blue-800 font-medium" %>
+            </dd>
+          </div>
+        <% end %>
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">Received</dt>
+          <dd class="text-sm text-gray-900">
+            <div><%= @mqtt_message.created_at.strftime("%Y-%m-%d %H:%M:%S") %></div>
+            <div class="text-xs text-gray-500"><%= time_ago_in_words(@mqtt_message.created_at) %> ago</div>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900">JSON Content</h2>
+    </div>
+    <div class="p-6">
+      <% if @mqtt_message.formatted_json.present? %>
+        <pre class="font-mono whitespace-pre-wrap text-sm p-4 bg-gray-50 rounded border overflow-x-auto"><%= @mqtt_message.formatted_json %></pre>
+      <% else %>
+        <pre class="font-mono whitespace-pre-wrap text-sm p-4 bg-gray-50 rounded border overflow-x-auto"><%= @mqtt_message.content %></pre>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mt-6 flex space-x-4">
+    <% if @mqtt_message.category == "device" %>
+      <%= link_to mqtt_messages_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+        <span class="mr-1">&larr;</span> Back to Messages
+      <% end %>
+    <% else %>
+      <%= link_to system_mqtt_messages_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+        <span class="mr-1">&larr;</span> Back to System Messages
+      <% end %>
+    <% end %>
+    <%= link_to root_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+      <span class="mr-1">&larr;</span> Back to Dashboard
+    <% end %>
+  </div>
+</div>

@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   post "/monitoring/device/:id/recalculate", to: "monitoring#recalculate_threshold", as: :recalculate_threshold_monitoring
 
   # List screens
-  resources :mqtt_messages, only: [ :index ] do
+  resources :mqtt_messages, only: [ :index, :show ] do
     collection do
       get :system
     end
