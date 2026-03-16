@@ -3,11 +3,16 @@
     <input type="text" name="q" value="<%= params[:q] %>"
            placeholder="<%= placeholder || 'Search...' %>"
            class="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" />
+    <% if params[:sort].present? %>
+      <input type="hidden" name="sort" value="<%= params[:sort] %>" />
+      <input type="hidden" name="direction" value="<%= params[:direction] %>" />
+    <% end %>
     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-150">
       Search
     </button>
     <% if params[:q].present? %>
-      <%= link_to "Clear", url, class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-150" %>
+      <% clear_params = params[:sort].present? ? { sort: params[:sort], direction: params[:direction] } : {} %>
+      <%= link_to "Clear", url_for(clear_params.merge(only_path: true)), class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-150" %>
     <% end %>
   </div>
 <% end %>

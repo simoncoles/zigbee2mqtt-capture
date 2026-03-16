@@ -22,10 +22,10 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead>
               <tr>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Topic</th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Device Name</th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model</th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Received</th>
+                <%= sortable_header("Topic", "topic") %>
+                <%= sortable_header("Device Name", "friendly_name") %>
+                <%= sortable_header("Model", "model") %>
+                <%= sortable_header("Received", "created_at") %>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
