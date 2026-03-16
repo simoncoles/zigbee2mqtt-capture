@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_15_215231) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_16_092012) do
   create_table "devices", force: :cascade do |t|
     t.decimal "alert_threshold_hours", precision: 10, scale: 2
     t.integer "capture_max"
@@ -32,9 +32,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_215231) do
     t.index ["friendly_name"], name: "index_devices_on_friendly_name"
     t.index ["ieee_addr"], name: "index_devices_on_ieee_addr", unique: true
     t.index ["is_responsive"], name: "index_devices_on_is_responsive"
+    t.index ["last_heard_from"], name: "index_devices_on_last_heard_from"
+    t.index ["manufacturer_name"], name: "index_devices_on_manufacturer_name"
+    t.index ["model"], name: "index_devices_on_model"
     t.index ["monitoring_enabled", "is_responsive", "last_alert_at"], name: "index_devices_on_monitoring_and_responsive_and_last_alert_at", order: { last_alert_at: :desc }
     t.index ["monitoring_enabled", "is_responsive", "last_heard_from"], name: "index_devices_on_monitoring_responsive_last_heard"
     t.index ["monitoring_enabled"], name: "index_devices_on_monitoring_enabled"
+    t.index ["power_source"], name: "index_devices_on_power_source"
   end
 
   create_table "mqtt_messages", force: :cascade do |t|
@@ -68,6 +72,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_215231) do
     t.index ["device_id"], name: "index_readings_on_device_id"
     t.index ["key"], name: "index_readings_on_key"
     t.index ["mqtt_message_id"], name: "index_readings_on_mqtt_message_id"
+    t.index ["value"], name: "index_readings_on_value"
   end
 
   add_foreign_key "readings", "devices"
