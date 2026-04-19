@@ -56,5 +56,19 @@ services:
     command: ./bin/rails runner "MqttMessage.listen"
     restart: unless-stopped
 
+  # GoodJob background worker (scheduled jobs, pruning, device monitoring)
+  worker:
+    build: .
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgresql://zigbee2mqtt:${DB_PASSWORD}@db/zigbee2mqtt_capture_production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      PRUNE_HOURS: ${PRUNE_HOURS:-48}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ./bin/jobs
+    restart: unless-stopped
+
 volumes:
   postgres_data:
