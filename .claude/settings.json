@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bin/rubocop >&2 || { echo 'RuboCop failed. Fix the lint errors above before committing (try bin/rubocop -a for autocorrect).' >&2; exit 2; }",
+            "if": "Bash(git commit*)",
+            "timeout": 120,
+            "statusMessage": "Running RuboCop before commit..."
+          }
+        ]
+      }
+    ]
+  }
+}
