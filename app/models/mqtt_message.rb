@@ -23,6 +23,12 @@
 #  index_mqtt_messages_on_topic                     (topic)
 #
 class MqttMessage < ApplicationRecord
+  # formatted_json used to be a persisted pretty-printed copy of `content`,
+  # roughly doubling row size across millions of rows. It is now derived on
+  # read (see #formatted_json below). The column is scheduled to be dropped;
+  # until the migration runs, ignore it so we don't SELECT the stale TEXT.
+  self.ignored_columns = %w[formatted_json]
+
   belongs_to :device, optional: true
   has_many :readings, dependent: :destroy
 
@@ -99,20 +105,12 @@ class MqttMessage < ApplicationRecord
         topic_parts = topic.split("/")
         friendly_name = topic_parts[1]
 
-        parsed_json = begin
-          JSON.parse(message)
-        rescue JSON::ParserError
-          nil
-        end
-        formatted = parsed_json ? JSON.pretty_generate(parsed_json) : nil
-
         device = friendly_name.present? ? Device.find_by(friendly_name: friendly_name) : nil
 
         MqttMessage.create(
           topic: topic,
           content: message,
           friendly_name: friendly_name,
-          formatted_json: formatted,
           device_id: device&.id,
           category: CATEGORY_COMMAND
         )
@@ -138,13 +136,10 @@ class MqttMessage < ApplicationRecord
         source_name = topic_parts[1] || topic
         category = categorize_topic(topic)
 
-        formatted = parsed_json ? JSON.pretty_generate(parsed_json) : message
-
         MqttMessage.create(
           topic: topic,
           content: message,
           friendly_name: source_name,
-          formatted_json: formatted,
           category: category
         )
         next
@@ -175,13 +170,11 @@ class MqttMessage < ApplicationRecord
 
       friendlyName = parsed_json["device"]["friendlyName"]
       model = parsed_json["device"]["model"]
-      formatted_json = JSON.pretty_generate(parsed_json)
       mqtt_message = MqttMessage.create(
         topic: topic,
         content: message,
         friendly_name: friendlyName,
         model: model,
-        formatted_json: formatted_json,
         device_id: device.id,
         category: CATEGORY_DEVICE
       )
@@ -219,9 +212,18 @@ class MqttMessage < ApplicationRecord
     end
   end
 
+  # Pretty-printed JSON derived from content. Falls back to raw content when
+  # content is not valid JSON so the UI still has something to display.
+  def formatted_json
+    return nil if content.blank?
+    JSON.pretty_generate(JSON.parse(content))
+  rescue JSON::ParserError
+    content
+  end
+
   # Render formatted_json as a safe, multiline, monospaced block for admin views
   def formatted_json_pre
-    return "" unless formatted_json.present?
+    return "" if formatted_json.blank?
 
     escaped = ERB::Util.html_escape(formatted_json)
     "<pre class=\"font-mono whitespace-pre-wrap text-sm p-3 bg-gray-50 rounded border\">#{escaped}</pre>".html_safe

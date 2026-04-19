@@ -1,8 +1,10 @@
 class MonitoringController < ApplicationController
   def index
+    # Do not preload :mqtt_messages here — with millions of rows on a heavy
+    # device, eager-loading TEXT-heavy mqtt_messages.content / formatted_json
+    # into Ruby is an OOM trigger. The view only uses device metadata.
     @non_responsive_devices = Device.non_responsive
                                    .order(last_alert_at: :desc)
-                                   .includes(:mqtt_messages)
 
     @stats = {
       total_devices: Device.count,

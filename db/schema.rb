@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_120000) do
   create_table "devices", force: :cascade do |t|
     t.decimal "alert_threshold_hours", precision: 10, scale: 2
     t.integer "capture_max"
@@ -46,7 +46,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_090000) do
     t.text "content"
     t.datetime "created_at", null: false
     t.bigint "device_id"
-    t.text "formatted_json"
     t.string "friendly_name"
     t.string "model"
     t.string "topic"

@@ -115,6 +115,24 @@ class MqttMessageTest < ActiveSupport::TestCase
     assert_equal "availability", MqttMessage.categorize_topic("zigbee-conservatory/Back Door/availability")
   end
 
+  # -- formatted_json --
+
+  test "formatted_json pretty-prints parseable content" do
+    message = mqtt_messages(:motion_event)
+    assert_includes message.formatted_json, "\"occupancy\": true"
+    assert_includes message.formatted_json, "\n"
+  end
+
+  test "formatted_json returns raw content when not JSON" do
+    message = MqttMessage.new(content: "not json")
+    assert_equal "not json", message.formatted_json
+  end
+
+  test "formatted_json is nil when content is blank" do
+    assert_nil MqttMessage.new(content: nil).formatted_json
+    assert_nil MqttMessage.new(content: "").formatted_json
+  end
+
   # -- formatted_json_pre --
 
   test "formatted_json_pre returns escaped HTML pre block" do
@@ -125,14 +143,12 @@ class MqttMessageTest < ActiveSupport::TestCase
     assert_includes html, "occupancy"
   end
 
-  test "formatted_json_pre returns empty string when formatted_json is nil" do
-    message = mqtt_messages(:light_status_1)
-    assert_equal "", message.formatted_json_pre
+  test "formatted_json_pre returns empty string when content is blank" do
+    assert_equal "", MqttMessage.new(content: nil).formatted_json_pre
   end
 
   test "formatted_json_pre html-escapes special characters" do
-    message = mqtt_messages(:motion_event)
-    message.formatted_json = '<script>alert("xss")</script>'
+    message = MqttMessage.new(content: '<script>alert("xss")</script>')
     html = message.formatted_json_pre
     assert_not_includes html, "<script>"
     assert_includes html, "&lt;script&gt;"

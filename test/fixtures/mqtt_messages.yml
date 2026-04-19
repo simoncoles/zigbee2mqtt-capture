@@ -28,13 +28,6 @@ motion_event:
   friendly_name: "Living Room Motion"
   model: "RTCGQ11LM"
   category: "device"
-  formatted_json: |
-    {
-      "occupancy": true,
-      "battery": 95,
-      "voltage": 3025,
-      "linkquality": 120
-    }
   device: motion_sensor
   created_at: <%= 1.hour.ago.to_fs(:db) %>
 
@@ -51,12 +44,6 @@ temp_reading:
   content: '{"temperature":22.5,"humidity":45,"pressure":1013,"battery":80,"linkquality":100}'
   friendly_name: "Kitchen Temperature"
   model: "WSDCGQ11LM"
-  formatted_json: |
-    {
-      "temperature": 22.5,
-      "humidity": 45,
-      "pressure": 1013
-    }
   device: temp_sensor
   created_at: <%= 10.hours.ago.to_fs(:db) %>
 
@@ -121,10 +108,6 @@ bridge_state:
   content: '{"state":"online"}'
   friendly_name: "bridge"
   category: "bridge"
-  formatted_json: |
-    {
-      "state": "online"
-    }
   created_at: <%= 20.minutes.ago.to_fs(:db) %>
 
 availability_update:
@@ -132,10 +115,6 @@ availability_update:
   content: '{"state":"online"}'
   friendly_name: "Living Room Motion"
   category: "availability"
-  formatted_json: |
-    {
-      "state": "online"
-    }
   created_at: <%= 15.minutes.ago.to_fs(:db) %>
 
 command_unknown_light:
@@ -143,8 +122,4 @@ command_unknown_light:
   content: '{"state":"ON"}'
   friendly_name: "Garage Light"
   category: "command"
-  formatted_json: |
-    {
-      "state": "ON"
-    }
   created_at: <%= 5.minutes.ago.to_fs(:db) %>
