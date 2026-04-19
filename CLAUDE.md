@@ -38,7 +38,3 @@
 ## Security & Configuration Tips
 - Configure via env vars: `MQTT_URL`, `MQTT_BROKER`, `DATABASE_URL`, `ZIGBEE2MQTT_BASE`, `PRUNE_HOURS`, optional `APPSIGNAL_PUSH_API_KEY`.
 - Use `.env` for local only; do not commit secrets. See `.env.example`.
-
-## Admin Interface
-- Uses Madmin (by Chris Oliver, `excid3/madmin`) for the admin UI — not a Basecamp gem.
-- Admin code lives in `app/madmin/`. Include screenshots in PRs when changing admin pages.
