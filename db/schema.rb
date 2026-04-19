@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_082301) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_090000) do
   create_table "devices", force: :cascade do |t|
     t.decimal "alert_threshold_hours", precision: 10, scale: 2
     t.integer "capture_max"
@@ -67,7 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_082301) do
     t.integer "message_count", default: 0, null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
-    t.index ["handled"], name: "index_mqtt_topics_on_handled"
+    t.index ["handled", "last_seen_at"], name: "index_mqtt_topics_on_handled_and_last_seen_at", order: { last_seen_at: :desc }
     t.index ["last_seen_at"], name: "index_mqtt_topics_on_last_seen_at"
     t.index ["message_count"], name: "index_mqtt_topics_on_message_count"
     t.index ["name"], name: "index_mqtt_topics_on_name", unique: true

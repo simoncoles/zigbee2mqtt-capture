@@ -13,10 +13,10 @@
 #
 # Indexes
 #
-#  index_mqtt_topics_on_handled        (handled)
-#  index_mqtt_topics_on_last_seen_at   (last_seen_at)
-#  index_mqtt_topics_on_message_count  (message_count)
-#  index_mqtt_topics_on_name           (name) UNIQUE
+#  index_mqtt_topics_on_handled_and_last_seen_at  (handled, last_seen_at DESC)
+#  index_mqtt_topics_on_last_seen_at              (last_seen_at)
+#  index_mqtt_topics_on_message_count             (message_count)
+#  index_mqtt_topics_on_name                      (name) UNIQUE
 #
 class MqttTopic < ApplicationRecord
   has_many :raw_mqtt_messages, dependent: :delete_all
