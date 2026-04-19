@@ -82,7 +82,7 @@
                 <div data-nav-dropdown-target="menu" hidden role="menu"
                      class="absolute left-0 mt-1 w-48 rounded-md bg-gray-800 shadow-lg ring-1 ring-black/10 py-1 z-10">
                   <%= link_to "Monitoring", monitoring_index_path, role: "menuitem", class: "#{request.path.start_with?('/monitoring') ? active_item : inactive_item} #{item_classes}" %>
-                  <%= link_to "Jobs", good_job_path, role: "menuitem", class: "#{request.path.start_with?('/good_job') ? active_item : inactive_item} #{item_classes}" %>
+                  <%= link_to "Jobs", good_job_path, role: "menuitem", target: "_blank", rel: "noopener", class: "#{request.path.start_with?('/good_job') ? active_item : inactive_item} #{item_classes}" %>
                   <%= link_to "Admin", admin_path, role: "menuitem", class: "#{request.path.start_with?('/admin') ? active_item : inactive_item} #{item_classes}" %>
                 </div>
               </div>
