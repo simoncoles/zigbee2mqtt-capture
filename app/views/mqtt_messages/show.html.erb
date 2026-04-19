@@ -21,6 +21,7 @@
               when "device" then "bg-blue-100 text-blue-800"
               when "bridge" then "bg-purple-100 text-purple-800"
               when "availability" then "bg-green-100 text-green-800"
+              when "command" then "bg-amber-100 text-amber-800"
               else "bg-gray-100 text-gray-800"
             end %>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
@@ -75,7 +76,12 @@
   </div>
 
   <div class="mt-6 flex space-x-4">
-    <% if @mqtt_message.category == "device" %>
+    <% case @mqtt_message.category
+       when "command" %>
+      <%= link_to commands_mqtt_messages_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+        <span class="mr-1">&larr;</span> Back to Command Messages
+      <% end %>
+    <% when "device" %>
       <%= link_to mqtt_messages_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
         <span class="mr-1">&larr;</span> Back to Messages
       <% end %>

@@ -113,3 +113,14 @@ availability_update:
       "state": "online"
     }
   created_at: <%= 15.minutes.ago.to_fs(:db) %>
+
+command_unknown_light:
+  topic: "zigbee2mqtt/Garage Light/set"
+  content: '{"state":"ON"}'
+  friendly_name: "Garage Light"
+  category: "command"
+  formatted_json: |
+    {
+      "state": "ON"
+    }
+  created_at: <%= 5.minutes.ago.to_fs(:db) %>

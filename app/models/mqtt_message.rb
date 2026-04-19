@@ -29,15 +29,19 @@ class MqttMessage < ApplicationRecord
     where("topic LIKE :q OR friendly_name LIKE :q OR content LIKE :q", q: "%#{query}%")
   }
 
-  scope :device_messages, -> { where(category: "device") }
-  scope :non_device_messages, -> { where.not(category: "device") }
-
   CATEGORY_BRIDGE = "bridge"
   CATEGORY_AVAILABILITY = "availability"
   CATEGORY_SYSTEM = "system"
   CATEGORY_DEVICE = "device"
+  CATEGORY_COMMAND = "command"
+
+  scope :device_messages, -> { where(category: CATEGORY_DEVICE) }
+  scope :non_device_messages, -> { where(category: [ CATEGORY_BRIDGE, CATEGORY_AVAILABILITY, CATEGORY_SYSTEM ]) }
+  scope :command_messages, -> { where(category: CATEGORY_COMMAND) }
 
   def self.categorize_topic(topic)
+    return CATEGORY_COMMAND if topic.end_with?("/set")
+
     parts = topic.split("/")
     source = parts[1] # e.g. "bridge", "device_name"
 
@@ -59,34 +63,32 @@ class MqttMessage < ApplicationRecord
       prefix = topic.split("/", 2).first
       next unless prefix&.start_with?("zigbee")
 
-      # Handle /set topics by stripping the suffix and processing as normal device message
+      # Persist /set command messages so they are visible in the UI.
+      # Zigbee2MQTT is independently subscribed to /set on the broker and will
+      # handle the actual command — we only capture a record of it.
       if topic.end_with?("/set")
-        device_topic = topic.gsub(/\/set$/, "")
-        Rails.logger.info("Received /set command for device topic: #{device_topic}")
-        Rails.logger.info("Command payload: #{message}")
+        Rails.logger.info("Captured /set command: #{topic} #{message}")
 
-        # Extract the device friendly name from the topic
-        # Topic format is typically: <zigbee-prefix>/device_friendly_name/set
         topic_parts = topic.split("/")
-        if topic_parts.length >= 2
-          friendly_name = topic_parts[1]
+        friendly_name = topic_parts[1]
 
-          # Find the device by friendly name
-          device = Device.find_by(friendly_name: friendly_name)
-
-          if device
-            Rails.logger.info("Found device: #{device.friendly_name} (IEEE: #{device.ieee_addr})")
-
-            # Forward the command to the device via MQTT publish
-            # Publishing to the device topic without /set will send the command to the device
-            client.publish(device_topic, message)
-            Rails.logger.info("Forwarded command to device topic: #{device_topic}")
-          else
-            Rails.logger.warn("Device not found for friendly_name: #{friendly_name}")
-          end
-        else
-          Rails.logger.warn("Invalid topic format: #{topic}")
+        parsed_json = begin
+          JSON.parse(message)
+        rescue JSON::ParserError
+          nil
         end
+        formatted = parsed_json ? JSON.pretty_generate(parsed_json) : nil
+
+        device = friendly_name.present? ? Device.find_by(friendly_name: friendly_name) : nil
+
+        MqttMessage.create(
+          topic: topic,
+          content: message,
+          friendly_name: friendly_name,
+          formatted_json: formatted,
+          device_id: device&.id,
+          category: CATEGORY_COMMAND
+        )
 
         next
       end

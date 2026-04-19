@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :mqtt_messages, only: [ :index, :show ] do
     collection do
       get :system
+      get :commands
     end
   end
   resources :devices, only: [ :index ]

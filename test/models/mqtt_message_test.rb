@@ -50,11 +50,20 @@ class MqttMessageTest < ActiveSupport::TestCase
     assert_not_includes results, mqtt_messages(:bridge_state)
   end
 
-  test "non_device_messages scope excludes device category" do
+  test "non_device_messages scope excludes device and command categories" do
     results = MqttMessage.non_device_messages
     assert results.none? { |m| m.category == "device" }
+    assert results.none? { |m| m.category == "command" }
     assert_includes results, mqtt_messages(:bridge_state)
     assert_includes results, mqtt_messages(:availability_update)
+    assert_not_includes results, mqtt_messages(:command_unknown_light)
+  end
+
+  test "command_messages scope returns only command category" do
+    results = MqttMessage.command_messages
+    assert results.all? { |m| m.category == "command" }
+    assert_includes results, mqtt_messages(:command_unknown_light)
+    assert_not_includes results, mqtt_messages(:motion_event)
   end
 
   # -- categorize_topic --
@@ -70,6 +79,11 @@ class MqttMessageTest < ActiveSupport::TestCase
 
   test "categorize_topic returns system for other topics" do
     assert_equal "system", MqttMessage.categorize_topic("zigbee2mqtt/unknown_thing")
+  end
+
+  test "categorize_topic returns command for /set topics" do
+    assert_equal "command", MqttMessage.categorize_topic("zigbee2mqtt/Office Light/set")
+    assert_equal "command", MqttMessage.categorize_topic("zigbee-shed/Outside Light/set")
   end
 
   test "categorize_topic works with alternate zigbee prefixes" do
