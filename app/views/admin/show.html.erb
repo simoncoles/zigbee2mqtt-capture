@@ -1,0 +1,57 @@
+<div class="w-full max-w-7xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Admin</h1>
+    <p class="text-gray-600">Database overview and maintenance actions</p>
+  </div>
+
+  <% if flash[:notice] %>
+    <div class="mb-6 bg-green-50 border border-green-200 text-green-800 rounded-lg px-4 py-3">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
+  <% if flash[:alert] %>
+    <div class="mb-6 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg px-4 py-3">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <div class="mb-8">
+    <h2 class="text-2xl font-semibold text-gray-900 mb-4">Table Record Counts</h2>
+    <% if @table_counts.any? %>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <% @table_counts.each do |model, count| %>
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div class="text-center">
+              <p class="text-sm font-medium text-gray-600 mb-1"><%= model.name %></p>
+              <p class="text-xs text-gray-400 mb-2"><%= model.table_name %></p>
+              <p class="text-3xl font-bold text-gray-900"><%= number_with_delimiter(count) %></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-sm text-gray-500">No tables found.</p>
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border-2 border-red-300 overflow-hidden">
+    <div class="px-6 py-4 bg-red-50 border-b border-red-200">
+      <h2 class="text-xl font-semibold text-red-900">Danger Zone</h2>
+    </div>
+    <div class="p-6">
+      <div class="flex items-start justify-between">
+        <div class="mr-6">
+          <h3 class="text-base font-semibold text-gray-900 mb-1">Remove all data</h3>
+          <p class="text-sm text-gray-600">
+            Permanently deletes every row from every table shown above. This cannot be undone.
+          </p>
+        </div>
+        <div class="flex-shrink-0">
+          <%= link_to "Remove All Data",
+              confirm_destroy_admin_path,
+              class: "inline-flex items-center px-4 py-2 border border-red-600 rounded-md text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors duration-150" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

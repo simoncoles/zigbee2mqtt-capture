@@ -26,6 +26,11 @@ Rails.application.routes.draw do
   resources :devices, only: [ :index ]
   resources :readings, only: [ :index ]
 
+  # Admin
+  get  "/admin",                 to: "admin#show",            as: :admin
+  get  "/admin/confirm_destroy", to: "admin#confirm_destroy", as: :confirm_destroy_admin
+  post "/admin/destroy_all",     to: "admin#destroy_all",     as: :destroy_all_admin
+
   # Defines the root path route ("/")
   root to: "dashboard#show"
 end
