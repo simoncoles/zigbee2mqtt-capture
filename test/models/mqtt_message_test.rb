@@ -72,6 +72,11 @@ class MqttMessageTest < ActiveSupport::TestCase
     assert_equal "system", MqttMessage.categorize_topic("zigbee2mqtt/unknown_thing")
   end
 
+  test "categorize_topic works with alternate zigbee prefixes" do
+    assert_equal "bridge", MqttMessage.categorize_topic("zigbee-shed/bridge/state")
+    assert_equal "availability", MqttMessage.categorize_topic("zigbee-conservatory/Back Door/availability")
+  end
+
   # -- formatted_json_pre --
 
   test "formatted_json_pre returns escaped HTML pre block" do

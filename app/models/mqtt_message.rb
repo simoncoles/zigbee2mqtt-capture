@@ -51,8 +51,14 @@ class MqttMessage < ApplicationRecord
   def self.listen
     Rails.logger.info("Connecting to MQTT broker at: #{ENV['MQTT_URL']}")
     client = MQTT::Client.connect(ENV["MQTT_URL"])
-    client.subscribe("zigbee2mqtt/+", "zigbee2mqtt/+/availability", "zigbee2mqtt/+/set")
+    # MQTT wildcards can't prefix-match, so subscribe to everything and filter
+    # for any first-level topic starting with "zigbee" (e.g. zigbee2mqtt,
+    # zigbee-shed, zigbee-conservatory).
+    client.subscribe("#")
     client.get do |topic, message|
+      prefix = topic.split("/", 2).first
+      next unless prefix&.start_with?("zigbee")
+
       # Handle /set topics by stripping the suffix and processing as normal device message
       if topic.end_with?("/set")
         device_topic = topic.gsub(/\/set$/, "")
@@ -60,7 +66,7 @@ class MqttMessage < ApplicationRecord
         Rails.logger.info("Command payload: #{message}")
 
         # Extract the device friendly name from the topic
-        # Topic format is typically: zigbee2mqtt/device_friendly_name/set
+        # Topic format is typically: <zigbee-prefix>/device_friendly_name/set
         topic_parts = topic.split("/")
         if topic_parts.length >= 2
           friendly_name = topic_parts[1]
