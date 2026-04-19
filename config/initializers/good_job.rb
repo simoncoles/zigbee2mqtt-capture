@@ -13,6 +13,18 @@ Rails.application.configure do
     raw_mqtt_message_prune: {
       cron: "30 * * * *",
       class: "RawMqttMessagePruneJob"
+    },
+    device_monitor: {
+      cron: "*/5 * * * *",
+      class: "DeviceMonitorJob"
+    },
+    device_monitor_stats: {
+      cron: "5 * * * *",
+      class: "DeviceMonitorStatsJob"
+    },
+    device_threshold_recalculation: {
+      cron: "45 3 * * *",
+      class: "DeviceThresholdRecalculationJob"
     }
   }
 end

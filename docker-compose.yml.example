@@ -56,22 +56,5 @@ services:
     command: ./bin/rails runner "MqttMessage.listen"
     restart: unless-stopped
 
-  # Device monitoring process
-  monitor:
-    build: .
-    environment:
-      RAILS_ENV: production
-      DATABASE_URL: postgresql://zigbee2mqtt:${DB_PASSWORD}@db/zigbee2mqtt_capture_production
-      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
-      MONITOR_ENABLED: ${MONITOR_ENABLED:-true}
-      MONITOR_CHECK_INTERVAL: ${MONITOR_CHECK_INTERVAL:-300}
-      MONITOR_BATCH_SIZE: ${MONITOR_BATCH_SIZE:-50}
-      MONITOR_DEBUG: ${MONITOR_DEBUG:-false}
-    depends_on:
-      db:
-        condition: service_healthy
-    command: ./bin/rails runner "DeviceMonitorProcess.run"
-    restart: unless-stopped
-
 volumes:
   postgres_data:

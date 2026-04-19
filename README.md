@@ -124,9 +124,10 @@ There isn't much and it is all done with environment variables.
 The application includes a device monitoring system that tracks device responsiveness and alerts when devices haven't been heard from:
 
 - `MONITOR_ENABLED` - Enable/disable monitoring globally (default: `true`)
-- `MONITOR_CHECK_INTERVAL` - How often to check devices in seconds (default: `300` - 5 minutes)
 - `MONITOR_BATCH_SIZE` - Number of devices to process in each batch (default: `50`)
-- `MONITOR_DEBUG` - Enable debug logging for monitoring (default: `false`) 
+- `MONITOR_DEBUG` - Enable debug logging for monitoring (default: `false`)
+
+Monitoring runs as GoodJob cron jobs (`DeviceMonitorJob` every 5 min, `DeviceMonitorStatsJob` hourly, `DeviceThresholdRecalculationJob` daily) executed by the `worker` Procfile process.
 
 
 ## Upgrades
@@ -156,12 +157,12 @@ ZIGBEE2MQTT_BASE="http://192.1.1.1:8080"
 
 To run everything use the convenience script `bin/dev`.
 
-This will start the web app, MQTT listener, and device monitor.
+This will start the web app, MQTT listener, and the GoodJob worker that runs the device-monitor cron jobs.
 
 To start things individually:
 
 - To run the web app: `rails server`
 - To run the MQTT listener: `rails runner MqttMessage.listen`
-- To run the device monitor: `rails runner DeviceMonitorProcess.run`
+- To run the GoodJob worker (handles device monitoring and prune cron jobs): `bundle exec good_job start`
 
 Admin interface is using https://github.com/excid3/madmin 
