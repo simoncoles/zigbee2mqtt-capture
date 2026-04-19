@@ -58,7 +58,7 @@ services:
     - redis-data:/data
 
   postgres:
-    image: postgres:17
+    image: postgres:16
     restart: unless-stopped
     networks:
     - default
