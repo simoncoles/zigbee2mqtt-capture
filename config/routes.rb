@@ -33,6 +33,9 @@ Rails.application.routes.draw do
   get  "/admin/confirm_destroy", to: "admin#confirm_destroy", as: :confirm_destroy_admin
   post "/admin/destroy_all",     to: "admin#destroy_all",     as: :destroy_all_admin
 
+  # Background jobs dashboard
+  mount GoodJob::Engine => "/good_job"
+
   # Defines the root path route ("/")
   root to: "dashboard#show"
 end
