@@ -2,6 +2,10 @@ module ApplicationHelper
   include Pagy::HelperLoader
   include Pagy::NumericHelperLoader
 
+  def nav_group_active?(*prefixes)
+    prefixes.any? { |p| request.path == p || request.path.start_with?("#{p}/") }
+  end
+
   def sortable_header(title, column)
     active = @sort_column == column
     if active && @sort_direction == "asc"

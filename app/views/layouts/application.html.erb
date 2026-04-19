@@ -19,22 +19,73 @@
   </head>
 
   <body>
+    <%
+      top_classes = "rounded-md px-3 py-2 text-sm font-medium"
+      active_top = "bg-gray-900 text-white"
+      inactive_top = "text-gray-300 hover:bg-gray-700 hover:text-white"
+      item_classes = "block px-4 py-2 text-sm"
+      active_item = "bg-gray-900 text-white"
+      inactive_item = "text-gray-300 hover:bg-gray-700 hover:text-white"
+      caret = '<svg class="ml-1 h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.38a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>'.html_safe
+    %>
     <nav class="bg-gray-800">
       <div class="container mx-auto px-5">
         <div class="flex items-center justify-between h-14">
           <div class="flex items-center space-x-1">
             <%= link_to "Zigbee2MQTT", root_path, class: "text-white font-semibold text-lg px-3 py-2" %>
             <div class="flex space-x-1">
-              <%= link_to "Dashboard", root_path, class: "#{request.path == root_path ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "Devices", devices_path, class: "#{request.path.start_with?('/devices') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "Readings", readings_path, class: "#{request.path.start_with?('/readings') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "Messages", mqtt_messages_path, class: "#{request.path == '/mqtt_messages' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "System Messages", system_mqtt_messages_path, class: "#{request.path == '/mqtt_messages/system' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "Raw Messages", raw_mqtt_messages_path, class: "#{request.path.start_with?('/raw_mqtt_messages') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "Topics", mqtt_topics_path, class: "#{request.path.start_with?('/mqtt_topics') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "Monitoring", monitoring_index_path, class: "#{request.path.start_with?('/monitoring') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "Jobs", good_job_path, class: "#{request.path.start_with?('/good_job') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
-              <%= link_to "Admin", admin_path, class: "#{request.path.start_with?('/admin') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'} rounded-md px-3 py-2 text-sm font-medium" %>
+              <%= link_to "Dashboard", root_path, class: "#{request.path == root_path ? active_top : inactive_top} #{top_classes}" %>
+
+              <div class="relative" data-controller="nav-dropdown">
+                <button type="button"
+                        data-nav-dropdown-target="button"
+                        data-action="click->nav-dropdown#toggle"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        class="<%= nav_group_active?('/devices', '/readings') ? active_top : inactive_top %> <%= top_classes %> inline-flex items-center">
+                  Data<%= caret %>
+                </button>
+                <div data-nav-dropdown-target="menu" hidden role="menu"
+                     class="absolute left-0 mt-1 w-48 rounded-md bg-gray-800 shadow-lg ring-1 ring-black/10 py-1 z-10">
+                  <%= link_to "Devices", devices_path, role: "menuitem", class: "#{request.path.start_with?('/devices') ? active_item : inactive_item} #{item_classes}" %>
+                  <%= link_to "Readings", readings_path, role: "menuitem", class: "#{request.path.start_with?('/readings') ? active_item : inactive_item} #{item_classes}" %>
+                </div>
+              </div>
+
+              <div class="relative" data-controller="nav-dropdown">
+                <button type="button"
+                        data-nav-dropdown-target="button"
+                        data-action="click->nav-dropdown#toggle"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        class="<%= nav_group_active?('/mqtt_messages', '/raw_mqtt_messages', '/mqtt_topics') ? active_top : inactive_top %> <%= top_classes %> inline-flex items-center">
+                  MQTT<%= caret %>
+                </button>
+                <div data-nav-dropdown-target="menu" hidden role="menu"
+                     class="absolute left-0 mt-1 w-48 rounded-md bg-gray-800 shadow-lg ring-1 ring-black/10 py-1 z-10">
+                  <%= link_to "Messages", mqtt_messages_path, role: "menuitem", class: "#{request.path == '/mqtt_messages' ? active_item : inactive_item} #{item_classes}" %>
+                  <%= link_to "System Messages", system_mqtt_messages_path, role: "menuitem", class: "#{request.path == '/mqtt_messages/system' ? active_item : inactive_item} #{item_classes}" %>
+                  <%= link_to "Raw Messages", raw_mqtt_messages_path, role: "menuitem", class: "#{request.path.start_with?('/raw_mqtt_messages') ? active_item : inactive_item} #{item_classes}" %>
+                  <%= link_to "Topics", mqtt_topics_path, role: "menuitem", class: "#{request.path.start_with?('/mqtt_topics') ? active_item : inactive_item} #{item_classes}" %>
+                </div>
+              </div>
+
+              <div class="relative" data-controller="nav-dropdown">
+                <button type="button"
+                        data-nav-dropdown-target="button"
+                        data-action="click->nav-dropdown#toggle"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        class="<%= nav_group_active?('/monitoring', '/good_job', '/admin') ? active_top : inactive_top %> <%= top_classes %> inline-flex items-center">
+                  System<%= caret %>
+                </button>
+                <div data-nav-dropdown-target="menu" hidden role="menu"
+                     class="absolute left-0 mt-1 w-48 rounded-md bg-gray-800 shadow-lg ring-1 ring-black/10 py-1 z-10">
+                  <%= link_to "Monitoring", monitoring_index_path, role: "menuitem", class: "#{request.path.start_with?('/monitoring') ? active_item : inactive_item} #{item_classes}" %>
+                  <%= link_to "Jobs", good_job_path, role: "menuitem", class: "#{request.path.start_with?('/good_job') ? active_item : inactive_item} #{item_classes}" %>
+                  <%= link_to "Admin", admin_path, role: "menuitem", class: "#{request.path.start_with?('/admin') ? active_item : inactive_item} #{item_classes}" %>
+                </div>
+              </div>
             </div>
           </div>
         </div>
