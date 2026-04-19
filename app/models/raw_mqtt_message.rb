@@ -29,13 +29,4 @@ class RawMqttMessage < ApplicationRecord
     return all if query.blank?
     where("topic LIKE :q OR payload LIKE :q", q: "%#{query}%")
   }
-
-  # To test run with `rails runner RawMqttMessage.prune_old`
-  def self.prune_old
-    while true
-      prune_hours = ENV.fetch("PRUNE_HOURS", 48).to_i
-      RawMqttMessage.where("created_at < ?", prune_hours.hours.ago).delete_all
-      sleep 3600
-    end
-  end
 end

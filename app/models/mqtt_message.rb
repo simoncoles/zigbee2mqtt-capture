@@ -191,24 +191,6 @@ class MqttMessage < ApplicationRecord
         { key: attr, value: parsed_json[attr].to_s, mqtt_message_id: mqtt_message.id, device_id: device.id, created_at: now, updated_at: now }
       }
       Reading.insert_all(reading_records) if reading_records.any?
-
-      # Prune old messages for this device
-      device.prune
-    end
-  end
-
-  #  To test run with `rails runner MqttMessage.prune_old`
-  def self.prune_old
-    # Continuously prune old messages every minute
-    while true
-      prune_hours = ENV.fetch("PRUNE_HOURS", 48).to_i
-      MqttMessage.transaction do
-        old_messages = MqttMessage.where("created_at < ?", prune_hours.hours.ago)
-        Reading.where(mqtt_message_id: old_messages.select(:id)).delete_all
-        old_messages.delete_all
-      end
-      # Do it again in an hour
-      sleep 3600
     end
   end
 

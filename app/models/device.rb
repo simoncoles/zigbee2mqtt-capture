@@ -111,15 +111,23 @@ class Device < ApplicationRecord
     time_since_last_message - alert_threshold_hours
   end
 
-  # Prune messages in excess of capture_max
-  def prune
+  # Prune messages in excess of capture_max using a timestamp cutoff and
+  # chunked deletes. Safe to run against millions of rows — no NOT IN list
+  # and no million-row transaction.
+  def prune(batch_size: 10_000)
     return if capture_max.nil?
 
-    kept_message_ids = mqtt_messages.order(created_at: :desc).limit(capture_max).pluck(:id)
-    messages_to_delete = mqtt_messages.where.not(id: kept_message_ids)
+    cutoff = mqtt_messages.order(created_at: :desc)
+                          .offset(capture_max).limit(1)
+                          .pick(:created_at)
+    return if cutoff.nil?
 
-    # Delete associated readings first, then messages
-    Reading.where(mqtt_message_id: messages_to_delete.select(:id)).delete_all
-    messages_to_delete.delete_all
+    loop do
+      doomed_ids = mqtt_messages.where("created_at <= ?", cutoff)
+                                .limit(batch_size).pluck(:id)
+      break if doomed_ids.empty?
+      Reading.where(mqtt_message_id: doomed_ids).delete_all
+      MqttMessage.where(id: doomed_ids).delete_all
+    end
   end
 end
