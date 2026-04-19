@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   end
   resources :devices, only: [ :index ]
   resources :readings, only: [ :index ]
+  resources :raw_mqtt_messages, only: [ :index, :show ]
+  resources :mqtt_topics, only: [ :index, :show ]
 
   # Admin
   get  "/admin",                 to: "admin#show",            as: :admin

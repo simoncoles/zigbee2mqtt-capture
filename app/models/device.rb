@@ -2,23 +2,37 @@
 #
 # Table name: devices
 #
-#  id                :integer          not null, primary key
-#  capture_max       :integer
-#  device_type       :string
-#  friendly_name     :string
-#  ieee_addr         :string
-#  last_heard_from   :datetime
-#  manufacturer_name :string
-#  model             :string
-#  network_address   :integer
-#  power_source      :string
-#  zcl_version       :integer
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id                    :integer          not null, primary key
+#  alert_threshold_hours :decimal(10, 2)
+#  capture_max           :integer
+#  device_type           :string
+#  friendly_name         :string
+#  ieee_addr             :string
+#  is_responsive         :boolean          default(TRUE)
+#  last_alert_at         :datetime
+#  last_checked_at       :datetime
+#  last_heard_from       :datetime
+#  manufacturer_name     :string
+#  model                 :string
+#  monitoring_enabled    :boolean          default(TRUE)
+#  network_address       :integer
+#  power_source          :string
+#  zcl_version           :integer
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
 #
 # Indexes
 #
-#  index_devices_on_ieee_addr  (ieee_addr) UNIQUE
+#  index_devices_on_friendly_name                                (friendly_name)
+#  index_devices_on_ieee_addr                                    (ieee_addr) UNIQUE
+#  index_devices_on_is_responsive                                (is_responsive)
+#  index_devices_on_last_heard_from                              (last_heard_from)
+#  index_devices_on_manufacturer_name                            (manufacturer_name)
+#  index_devices_on_model                                        (model)
+#  index_devices_on_monitoring_and_responsive_and_last_alert_at  (monitoring_enabled,is_responsive,last_alert_at DESC)
+#  index_devices_on_monitoring_enabled                           (monitoring_enabled)
+#  index_devices_on_monitoring_responsive_last_heard             (monitoring_enabled,is_responsive,last_heard_from)
+#  index_devices_on_power_source                                 (power_source)
 #
 class Device < ApplicationRecord
   has_many :mqtt_messages, dependent: :destroy

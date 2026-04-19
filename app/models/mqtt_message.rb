@@ -15,10 +15,12 @@
 #
 # Indexes
 #
-#  index_mqtt_messages_on_category       (category)
-#  index_mqtt_messages_on_device_id      (device_id)
-#  index_mqtt_messages_on_friendly_name  (friendly_name)
-#  index_mqtt_messages_on_topic          (topic)
+#  index_mqtt_messages_on_category                  (category)
+#  index_mqtt_messages_on_created_at                (created_at)
+#  index_mqtt_messages_on_device_id                 (device_id)
+#  index_mqtt_messages_on_device_id_and_created_at  (device_id,created_at DESC)
+#  index_mqtt_messages_on_friendly_name             (friendly_name)
+#  index_mqtt_messages_on_topic                     (topic)
 #
 class MqttMessage < ApplicationRecord
   belongs_to :device, optional: true
@@ -51,6 +53,20 @@ class MqttMessage < ApplicationRecord
     CATEGORY_SYSTEM
   end
 
+  # Capture every incoming packet into the broker-wide raw store. Runs before
+  # the zigbee branch so we see all topics, and is guarded by the caller's
+  # rescue so a failure here can never break zigbee ingest.
+  def self.capture_raw_message(topic, payload, retained: false, qos: 0)
+    mqtt_topic = MqttTopic.record_seen!(topic)
+    RawMqttMessage.create!(
+      mqtt_topic_id: mqtt_topic.id,
+      topic: topic,
+      payload: payload,
+      retained: retained,
+      qos: qos
+    )
+  end
+
   #  To test run with `rails runner MqttMessage.listen`
   def self.listen
     Rails.logger.info("Connecting to MQTT broker at: #{ENV['MQTT_URL']}")
@@ -59,7 +75,18 @@ class MqttMessage < ApplicationRecord
     # for any first-level topic starting with "zigbee" (e.g. zigbee2mqtt,
     # zigbee-shed, zigbee-conservatory).
     client.subscribe("#")
-    client.get do |topic, message|
+    client.get_packet do |packet|
+      topic    = packet.topic
+      message  = packet.payload
+      retained = packet.retain
+      qos      = packet.qos
+
+      begin
+        capture_raw_message(topic, message, retained: retained, qos: qos)
+      rescue => e
+        Rails.logger.error("Raw MQTT capture failed for #{topic}: #{e.class}: #{e.message}")
+      end
+
       prefix = topic.split("/", 2).first
       next unless prefix&.start_with?("zigbee")
 

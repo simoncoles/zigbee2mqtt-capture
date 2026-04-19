@@ -2,3 +2,4 @@ web: bin/rails server
 css: bin/rails tailwindcss:watch
 mqtt: ./bin/rails runner "MqttMessage.listen"
 monitor: ./bin/rails runner "DeviceMonitorProcess.run"
+raw_prune: ./bin/rails runner "RawMqttMessage.prune_old"

@@ -1,0 +1,20 @@
+zigbee_motion:
+  name: "zigbee2mqtt/Living Room Motion"
+  handled: true
+  message_count: 2
+  first_seen_at: <%= 3.hours.ago.to_fs(:db) %>
+  last_seen_at:  <%= 1.hour.ago.to_fs(:db) %>
+
+home_assistant_status:
+  name: "homeassistant/status"
+  handled: false
+  message_count: 2
+  first_seen_at: <%= 6.hours.ago.to_fs(:db) %>
+  last_seen_at:  <%= 10.minutes.ago.to_fs(:db) %>
+
+weather_temp:
+  name: "weather/outside/temperature"
+  handled: false
+  message_count: 1
+  first_seen_at: <%= 2.hours.ago.to_fs(:db) %>
+  last_seen_at:  <%= 2.hours.ago.to_fs(:db) %>

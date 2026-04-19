@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: mqtt_messages
+#
+#  id             :integer          not null, primary key
+#  category       :string           default("device"), not null
+#  content        :text
+#  formatted_json :text
+#  friendly_name  :string
+#  model          :string
+#  topic          :string
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  device_id      :bigint
+#
+# Indexes
+#
+#  index_mqtt_messages_on_category                  (category)
+#  index_mqtt_messages_on_created_at                (created_at)
+#  index_mqtt_messages_on_device_id                 (device_id)
+#  index_mqtt_messages_on_device_id_and_created_at  (device_id,created_at DESC)
+#  index_mqtt_messages_on_friendly_name             (friendly_name)
+#  index_mqtt_messages_on_topic                     (topic)
+#
 require "test_helper"
 
 class MqttMessageTest < ActiveSupport::TestCase

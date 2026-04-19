@@ -1,0 +1,31 @@
+ha_online:
+  mqtt_topic: home_assistant_status
+  topic: "homeassistant/status"
+  payload: "online"
+  retained: true
+  qos: 0
+  created_at: <%= 10.minutes.ago.to_fs(:db) %>
+
+ha_offline:
+  mqtt_topic: home_assistant_status
+  topic: "homeassistant/status"
+  payload: "offline"
+  retained: false
+  qos: 0
+  created_at: <%= 1.hour.ago.to_fs(:db) %>
+
+weather_one:
+  mqtt_topic: weather_temp
+  topic: "weather/outside/temperature"
+  payload: "18.2"
+  retained: false
+  qos: 1
+  created_at: <%= 2.hours.ago.to_fs(:db) %>
+
+zigbee_raw:
+  mqtt_topic: zigbee_motion
+  topic: "zigbee2mqtt/Living Room Motion"
+  payload: '{"occupancy":true}'
+  retained: false
+  qos: 0
+  created_at: <%= 1.hour.ago.to_fs(:db) %>

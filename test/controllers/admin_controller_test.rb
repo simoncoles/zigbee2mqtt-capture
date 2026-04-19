@@ -8,6 +8,8 @@ class AdminControllerTest < ActionDispatch::IntegrationTest
     assert_match "Device", response.body
     assert_match "MqttMessage", response.body
     assert_match "Reading", response.body
+    assert_match "MqttTopic", response.body
+    assert_match "RawMqttMessage", response.body
   end
 
   test "GET /admin/confirm_destroy returns 200" do
@@ -43,6 +45,8 @@ class AdminControllerTest < ActionDispatch::IntegrationTest
     assert Device.count > 0
     assert MqttMessage.count > 0
     assert Reading.count > 0
+    assert MqttTopic.count > 0
+    assert RawMqttMessage.count > 0
 
     post destroy_all_admin_path, params: { confirmation: "DELETE ALL DATA" }
     assert_redirected_to admin_path
@@ -51,6 +55,8 @@ class AdminControllerTest < ActionDispatch::IntegrationTest
     assert_equal 0, Device.count
     assert_equal 0, MqttMessage.count
     assert_equal 0, Reading.count
+    assert_equal 0, MqttTopic.count
+    assert_equal 0, RawMqttMessage.count
   end
 
   test "POST /admin/destroy_all tolerates whitespace around the phrase" do

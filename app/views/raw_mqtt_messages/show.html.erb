@@ -1,0 +1,83 @@
+<% parsed_payload = begin
+     JSON.parse(@raw_mqtt_message.payload.to_s)
+   rescue JSON::ParserError, TypeError
+     nil
+   end
+   display_payload = parsed_payload ? JSON.pretty_generate(parsed_payload) : @raw_mqtt_message.payload.to_s %>
+
+<div class="w-full max-w-7xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Raw Message Details</h1>
+    <p class="text-gray-600">Raw MQTT message #<%= @raw_mqtt_message.id %></p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900">Message Information</h2>
+    </div>
+    <div class="p-6">
+      <dl class="space-y-4">
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">Topic</dt>
+          <dd class="text-sm text-gray-900"><code class="bg-gray-100 px-2 py-1 rounded"><%= @raw_mqtt_message.topic %></code></dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">Topic Page</dt>
+          <dd class="text-sm">
+            <%= link_to "View all messages for this topic", mqtt_topic_path(@raw_mqtt_message.mqtt_topic_id), class: "text-blue-600 hover:text-blue-800 font-medium" %>
+          </dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">Handled by existing code</dt>
+          <dd class="text-sm">
+            <% if @raw_mqtt_message.mqtt_topic.handled %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">handled</span>
+            <% else %>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">unhandled</span>
+            <% end %>
+          </dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">Retained</dt>
+          <dd class="text-sm text-gray-900"><%= @raw_mqtt_message.retained ? "Yes" : "No" %></dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">QoS</dt>
+          <dd class="text-sm text-gray-900"><%= @raw_mqtt_message.qos %></dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-sm font-medium text-gray-500">Received</dt>
+          <dd class="text-sm text-gray-900">
+            <div><%= @raw_mqtt_message.created_at.strftime("%Y-%m-%d %H:%M:%S") %></div>
+            <div class="text-xs text-gray-500"><%= time_ago_in_words(@raw_mqtt_message.created_at) %> ago</div>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900">Payload</h2>
+    </div>
+    <div class="p-6">
+      <% if display_payload.present? %>
+        <pre class="font-mono whitespace-pre-wrap text-sm p-4 bg-gray-50 rounded border overflow-x-auto"><%= display_payload %></pre>
+      <% else %>
+        <p class="text-sm text-gray-500 italic">Empty payload</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mt-6 flex space-x-4">
+    <%= link_to raw_mqtt_messages_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+      <span class="mr-1">&larr;</span> Back to Raw Messages
+    <% end %>
+    <%= link_to mqtt_topic_path(@raw_mqtt_message.mqtt_topic_id), class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+      View Topic <span class="ml-1">&rarr;</span>
+    <% end %>
+    <%= link_to root_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+      <span class="mr-1">&larr;</span> Back to Dashboard
+    <% end %>
+  </div>
+</div>

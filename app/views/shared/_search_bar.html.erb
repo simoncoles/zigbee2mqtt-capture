@@ -7,6 +7,10 @@
       <input type="hidden" name="sort" value="<%= params[:sort] %>" />
       <input type="hidden" name="direction" value="<%= params[:direction] %>" />
     <% end %>
+    <% (local_assigns[:extra_hidden] || {}).each do |k, v| %>
+      <% next if v.blank? %>
+      <input type="hidden" name="<%= k %>" value="<%= v %>" />
+    <% end %>
     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-150">
       Search
     </button>

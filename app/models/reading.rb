@@ -12,8 +12,13 @@
 #
 # Indexes
 #
-#  index_readings_on_device_id        (device_id)
-#  index_readings_on_mqtt_message_id  (mqtt_message_id)
+#  index_readings_on_created_at                (created_at)
+#  index_readings_on_device_id                 (device_id)
+#  index_readings_on_device_id_and_created_at  (device_id,created_at DESC)
+#  index_readings_on_device_key_created        (device_id,key,created_at DESC)
+#  index_readings_on_key                       (key)
+#  index_readings_on_mqtt_message_id           (mqtt_message_id)
+#  index_readings_on_value                     (value)
 #
 # Foreign Keys
 #

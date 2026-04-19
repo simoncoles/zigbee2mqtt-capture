@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_16_092012) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_082301) do
   create_table "devices", force: :cascade do |t|
     t.decimal "alert_threshold_hours", precision: 10, scale: 2
     t.integer "capture_max"
@@ -59,6 +59,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_092012) do
     t.index ["topic"], name: "index_mqtt_messages_on_topic"
   end
 
+  create_table "mqtt_topics", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "first_seen_at", null: false
+    t.boolean "handled", default: false, null: false
+    t.datetime "last_seen_at", null: false
+    t.integer "message_count", default: 0, null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["handled"], name: "index_mqtt_topics_on_handled"
+    t.index ["last_seen_at"], name: "index_mqtt_topics_on_last_seen_at"
+    t.index ["message_count"], name: "index_mqtt_topics_on_message_count"
+    t.index ["name"], name: "index_mqtt_topics_on_name", unique: true
+  end
+
+  create_table "raw_mqtt_messages", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "mqtt_topic_id", null: false
+    t.text "payload"
+    t.integer "qos", default: 0, null: false
+    t.boolean "retained", default: false, null: false
+    t.string "topic", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_raw_mqtt_messages_on_created_at"
+    t.index ["mqtt_topic_id", "created_at"], name: "index_raw_mqtt_messages_on_mqtt_topic_id_and_created_at", order: { created_at: :desc }
+    t.index ["mqtt_topic_id"], name: "index_raw_mqtt_messages_on_mqtt_topic_id"
+    t.index ["topic"], name: "index_raw_mqtt_messages_on_topic"
+  end
+
   create_table "readings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "device_id", null: false
@@ -75,6 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_16_092012) do
     t.index ["value"], name: "index_readings_on_value"
   end
 
+  add_foreign_key "raw_mqtt_messages", "mqtt_topics"
   add_foreign_key "readings", "devices"
   add_foreign_key "readings", "mqtt_messages"
 end

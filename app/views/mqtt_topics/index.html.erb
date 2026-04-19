@@ -1,0 +1,77 @@
+<% all_link  = url_for(request.query_parameters.merge(filter: nil, page: nil).compact)
+   unhandled_link = url_for(request.query_parameters.merge(filter: "unhandled", page: nil))
+   active_pill   = "bg-blue-600 text-white"
+   inactive_pill = "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300" %>
+
+<div class="w-full max-w-7xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Topics</h1>
+    <p class="text-gray-600">Every distinct MQTT topic seen on the broker</p>
+  </div>
+
+  <div class="mb-4 flex gap-2">
+    <%= link_to "All topics", all_link, class: "inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors #{@filter == 'all' ? active_pill : inactive_pill}" %>
+    <%= link_to "Unhandled only", unhandled_link, class: "inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors #{@filter == 'unhandled' ? active_pill : inactive_pill}" %>
+  </div>
+
+  <%= render "shared/search_bar", url: mqtt_topics_path, placeholder: "Search topics by name...", extra_hidden: { filter: params[:filter] } %>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-900">Topics</h2>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+          <%= @pagy.count %> total
+        </span>
+      </div>
+    </div>
+
+    <div class="p-6">
+      <% if @mqtt_topics.any? %>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <%= sortable_header("Name", "name") %>
+                <%= sortable_header("Handled", "handled") %>
+                <%= sortable_header("Messages", "message_count") %>
+                <%= sortable_header("First seen", "first_seen_at") %>
+                <%= sortable_header("Last seen", "last_seen_at") %>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @mqtt_topics.each do |topic| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150 cursor-pointer" onclick="window.location='<%= mqtt_topic_path(topic) %>'">
+                  <td class="px-3 py-4 text-sm text-gray-900 font-medium"><code class="bg-gray-100 px-2 py-1 rounded"><%= topic.name %></code></td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm">
+                    <% if topic.handled %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">handled</span>
+                    <% else %>
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">unhandled</span>
+                    <% end %>
+                  </td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-900"><%= number_with_delimiter(topic.message_count) %></td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= time_ago_in_words(topic.first_seen_at) %> ago</td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500"><%= time_ago_in_words(topic.last_seen_at) %> ago</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">No topics found<%= " matching '#{params[:q]}'" if params[:q].present? %>.</p>
+      <% end %>
+    </div>
+
+    <%= render "shared/pagination", pagy: @pagy %>
+  </div>
+
+  <div class="mt-6 flex space-x-4">
+    <%= link_to raw_mqtt_messages_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+      View Raw Messages <span class="ml-1">&rarr;</span>
+    <% end %>
+    <%= link_to root_path, class: "inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800" do %>
+      <span class="mr-1">&larr;</span> Back to Dashboard
+    <% end %>
+  </div>
+</div>
