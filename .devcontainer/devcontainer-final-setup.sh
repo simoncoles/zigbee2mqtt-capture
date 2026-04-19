@@ -95,9 +95,23 @@ else
   echo "Playwright browsers already installed, skipping download."
 fi
 
+# The claude binary lives under ~/.local (not ~/.claude), so it is NOT preserved
+# by the claude-config volume and must be reinstalled on every container recreate.
 if ! command -v claude >/dev/null 2>&1; then
-  curl -fsSL --retry 3 --retry-delay 5 https://claude.ai/install.sh | bash \
-    || echo "WARNING: claude.ai install failed (possibly 429). Continuing." >&2
+  for attempt in 1 2 3 4; do
+    if curl -fsSL https://claude.ai/install.sh | bash; then
+      break
+    fi
+    delay=$((attempt * 15))
+    echo "claude install attempt $attempt failed; retrying in ${delay}s..." >&2
+    sleep "$delay"
+  done
+
+  hash -r
+  if ! command -v claude >/dev/null 2>&1; then
+    echo "ERROR: claude install failed after 4 attempts." >&2
+    echo "       Re-run manually: curl -fsSL https://claude.ai/install.sh | bash" >&2
+  fi
 fi
 
 
