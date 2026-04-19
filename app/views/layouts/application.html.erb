@@ -65,6 +65,7 @@
                      class="absolute left-0 mt-1 w-48 rounded-md bg-gray-800 shadow-lg ring-1 ring-black/10 py-1 z-10">
                   <%= link_to "Messages", mqtt_messages_path, role: "menuitem", class: "#{request.path == '/mqtt_messages' ? active_item : inactive_item} #{item_classes}" %>
                   <%= link_to "System Messages", system_mqtt_messages_path, role: "menuitem", class: "#{request.path == '/mqtt_messages/system' ? active_item : inactive_item} #{item_classes}" %>
+                  <%= link_to "Commands", commands_mqtt_messages_path, role: "menuitem", class: "#{request.path == '/mqtt_messages/commands' ? active_item : inactive_item} #{item_classes}" %>
                   <%= link_to "Raw Messages", raw_mqtt_messages_path, role: "menuitem", class: "#{request.path.start_with?('/raw_mqtt_messages') ? active_item : inactive_item} #{item_classes}" %>
                   <%= link_to "Topics", mqtt_topics_path, role: "menuitem", class: "#{request.path.start_with?('/mqtt_topics') ? active_item : inactive_item} #{item_classes}" %>
                 </div>
