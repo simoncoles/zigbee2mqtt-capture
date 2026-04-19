@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_19_120001) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_19_150352) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pg_trgm"
 
   create_table "devices", force: :cascade do |t|
     t.decimal "alert_threshold_hours", precision: 10, scale: 2
@@ -149,11 +150,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_19_120001) do
     t.string "topic"
     t.datetime "updated_at", null: false
     t.index ["category"], name: "index_mqtt_messages_on_category"
+    t.index ["content"], name: "index_mqtt_messages_on_content_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["created_at"], name: "index_mqtt_messages_on_created_at"
     t.index ["device_id", "created_at"], name: "index_mqtt_messages_on_device_id_and_created_at", order: { created_at: :desc }
     t.index ["device_id"], name: "index_mqtt_messages_on_device_id"
     t.index ["friendly_name"], name: "index_mqtt_messages_on_friendly_name"
+    t.index ["friendly_name"], name: "index_mqtt_messages_on_friendly_name_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["topic"], name: "index_mqtt_messages_on_topic"
+    t.index ["topic"], name: "index_mqtt_messages_on_topic_trgm", opclass: :gin_trgm_ops, using: :gin
   end
 
   create_table "mqtt_topics", force: :cascade do |t|

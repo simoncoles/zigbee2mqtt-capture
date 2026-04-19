@@ -34,7 +34,7 @@ class MqttMessage < ApplicationRecord
 
   scope :search, ->(query) {
     return all if query.blank?
-    where("topic LIKE :q OR friendly_name LIKE :q OR content LIKE :q", q: "%#{query}%")
+    where("topic ILIKE :q OR friendly_name ILIKE :q OR content ILIKE :q", q: "%#{query}%")
   }
 
   CATEGORY_BRIDGE = "bridge"
