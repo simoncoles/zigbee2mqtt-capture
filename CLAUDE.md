@@ -4,7 +4,7 @@
 - `app/`: Rails MVC code (`models/`, `controllers/`, `views/`, `assets/`, `javascript/`). Key: `app/models/mqtt_message.rb` (MQTT listener), `app/models/device.rb`, `app/models/reading.rb`.
 - `app/madmin/`: Admin UI built with Madmin by Chris Oliver.
 - `config/`: environment, routes, initializers. `config.ru` boots Rack.
-- `db/`: schema and migrations; persisted in `storage/` when using SQLite.
+- `db/`: schema and migrations. PostgreSQL is the only supported database (good_job dependency).
 - `bin/`: runnable scripts (`bin/dev`, `bin/rails`, `bin/rubocop`, `bin/brakeman`).
 - `test/`: Minitest suites, fixtures under `test/fixtures/`.
 - `Dockerfile`, `Procfile`, `.env.example`: containerization and local env.

@@ -73,11 +73,8 @@ gem "dotenv", groups: [ :development, :test ]
 # MQTT
 gem "mqtt"
 
-# SQLite is the default database
-gem "sqlite3"
-# But we also support Postgres and MySQL
+# PostgreSQL is required (good_job dependency)
 gem "pg", "~> 1.5"
-gem "mysql2", "~> 0.5"
 
 # Sensible logging
 gem "lograge"
@@ -93,3 +90,5 @@ gem "tailwindcss-rails"
 
 # Pagination
 gem "pagy"
+
+gem "good_job", "~> 4.18"

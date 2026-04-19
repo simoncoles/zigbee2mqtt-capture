@@ -111,7 +111,7 @@ There isn't much and it is all done with environment variables.
 
 ### Core Settings
 
-- `DATABASE_URL` is your database connection string. It can be a Postgres or MySQL database, or if you specify nothing, it'll use SQLite.
+- `DATABASE_URL` is your PostgreSQL connection string. Postgres is required (good_job depends on it); SQLite and MySQL are not supported. Example: `postgres://user:pass@host:5432/zigbee2mqtt_capture`.
 - `ZIGBEE2MQTT_BASE` is your Zigbee2MQTT base URL which will be used to generate links to the Zigbee2MQTT web interface.
 - `APPSIGNAL_PUSH_API_KEY` if you want to use AppSignal, this is your AppSignal API key.
 - `FORCE_THREADS=YES` if you want to force the background threads to run. This is useful if want to force the threads to launch

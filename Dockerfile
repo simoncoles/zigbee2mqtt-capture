@@ -14,10 +14,10 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 WORKDIR /rails
 
 # Install base packages
-# We install SQLite3, Postgres, and MySQL client libraries for the most common database configurations
+# PostgreSQL is the only supported database (good_job dependency).
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client \
-    build-essential default-libmysqlclient-dev git pkg-config libsqlite3-0 \
+    build-essential git pkg-config \
     && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 

@@ -1,33 +1,33 @@
-# SQLite. Versions 3.8.0 and up are supported.
-#   gem install sqlite3
+# PostgreSQL is required in every environment (good_job dependency).
+# See https://guides.rubyonrails.org/configuring.html#configuring-a-database
 #
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem "sqlite3"
-#
+# DATABASE_URL, if set, overrides these settings.
+
 default: &default
-  adapter: sqlite3
+  adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
 
 development:
   <<: *default
-  database: storage/development.sqlite3
+  database: zigbee2mqtt_capture_development
+  host: <%= ENV.fetch("DATABASE_HOST", "postgres") %>
+  username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "postgres") %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: storage/test.sqlite3
+  database: zigbee2mqtt_capture_test
+  host: <%= ENV.fetch("DATABASE_HOST", "postgres") %>
+  username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "postgres") %>
 
-
-# SQLite3 write its data on the local filesystem, as such it requires
-# persistent disks. If you are deploying to a managed service, you should
-# make sure it provides disk persistence, as many don't.
-#
-# Similarly, if you deploy your application as a Docker container, you must
-# ensure the database is located in a persisted volume.
 production:
   <<: *default
-  database: storage/production.sqlite3
-  
+  database: <%= ENV.fetch("DATABASE_NAME", "zigbee2mqtt_capture_production") %>
+  host: <%= ENV["DATABASE_HOST"] %>
+  username: <%= ENV["DATABASE_USERNAME"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
