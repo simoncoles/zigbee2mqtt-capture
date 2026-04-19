@@ -8,6 +8,10 @@ services:
 
     volumes:
     - ../..:/workspaces:cached
+    # Persist GitHub CLI configuration
+    - gh-config:/home/vscode/.config/gh
+    # Claude
+    - claude-config:/home/vscode/.claude
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
@@ -51,7 +55,7 @@ services:
     - redis-data:/data
 
   postgres:
-    image: postgres:16.1
+    image: postgres:17
     restart: unless-stopped
     networks:
     - default
